@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Career Path Planner</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="roadmap.html" class="nav-link">Roadmap</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+                <a href="portfolio.html" class="nav-link">Portfolio</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <h1>Welcome, <span id="user-name">User</span>!</h1>
+        
+        <div class="grid grid-cols-2">
+            <!-- Career Goal Section -->
+            <section class="card">
+                <h2>Career Goal</h2>
+                <div id="career-goal-display" style="display: none;">
+                    <p id="goal-text"></p>
+                    <button type="button" onclick="editCareerGoal()" class="btn btn-secondary">Edit</button>
+                </div>
+                <form id="career-form" style="display: none;">
+                    <textarea id="career-goal" placeholder="What's your dream career?" required></textarea>
+                    <div class="form-group">
+                        <input type="number" id="years-exp" placeholder="Years of Experience" min="0">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+                <button type="button" onclick="toggleCareerForm()" class="btn btn-primary" id="start-btn">Start Planning</button>
+            </section>
+
+            <!-- Skills Section -->
+            <section class="card">
+                <h2>Your Skills</h2>
+                <div id="skills-list" class="skills-container"></div>
+                <input type="text" id="skill-input" placeholder="Add a new skill">
+                <button type="button" onclick="addSkill()" class="btn btn-secondary">Add Skill</button>
+            </section>
+        </div>
+
+        <!-- Analysis Section -->
+        <section class="card" id="analysis-section" style="display: none;">
+            <h2>Career Analysis</h2>
+            <div id="analysis-results"></div>
+            <button type="button" onclick="generateRoadmap()" class="btn btn-primary">Generate Roadmap</button>
+        </section>
+
+        <!-- Roadmap Preview -->
+        <section class="card" id="roadmap-section" style="display: none;">
+            <h2>Learning Roadmap</h2>
+            <div id="roadmap-content"></div>
+            <button type="button" onclick="viewFullRoadmap()" class="btn btn-primary">View Full Roadmap</button>
+        </section>
+
+        <!-- Progress Tracker -->
+        <section class="card">
+            <h2>Progress Tracker</h2>
+            <button type="button" onclick="loadProgress()" class="btn btn-secondary">Load Progress</button>
+            <div id="progress-container"></div>
+        </section>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

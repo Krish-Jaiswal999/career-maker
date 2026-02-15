@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Information - Career Path Planner</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="roadmap.html" class="nav-link">Roadmap</a>
+                <a href="portfolio-info.html" class="nav-link active">Portfolio</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <h1>📋 Complete Your Portfolio Information</h1>
+        <p>Fill in your details to generate a professional portfolio</p>
+
+        <form id="portfolio-form" class="portfolio-form">
+            <!-- Personal Information -->
+            <section class="card">
+                <h2>👤 Personal Information</h2>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" name="city" placeholder="San Francisco" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="state">State/Province *</label>
+                    <input type="text" id="state" name="state" placeholder="California" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">Country *</label>
+                    <input type="text" id="country" name="country" placeholder="United States" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="professional_summary">Professional Summary</label>
+                    <textarea id="professional_summary" name="professional_summary" rows="4" placeholder="Brief overview of your professional background and goals..."></textarea>
+                </div>
+            </section>
+
+            <!-- Contact & Social -->
+            <section class="card">
+                <h2>🔗 Contact & Social Links</h2>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="linkedin_url">LinkedIn Profile URL</label>
+                    <input type="url" id="linkedin_url" name="linkedin_url" placeholder="https://linkedin.com/in/yourprofile">
+                </div>
+
+                <div class="form-group">
+                    <label for="github_url">GitHub Profile URL</label>
+                    <input type="url" id="github_url" name="github_url" placeholder="https://github.com/yourprofile">
+                </div>
+
+                <div class="form-group">
+                    <label for="portfolio_url">Personal Website/Portfolio</label>
+                    <input type="url" id="portfolio_url" name="portfolio_url" placeholder="https://yourwebsite.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="twitter_url">Twitter/X Profile (Optional)</label>
+                    <input type="url" id="twitter_url" name="twitter_url" placeholder="https://twitter.com/yourprofile">
+                </div>
+            </section>
+
+            <!-- Education -->
+            <section class="card">
+                <h2>🎓 Education</h2>
+                
+                <div class="form-group">
+                    <label for="highest_degree">Highest Degree *</label>
+                    <select id="highest_degree" name="highest_degree" required>
+                        <option value="">Select your highest degree</option>
+                        <option value="high_school">High School Diploma</option>
+                        <option value="associate">Associate's Degree</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="phd">PhD/Doctorate</option>
+                        <option value="bootcamp">Bootcamp Certificate</option>
+                        <option value="self_taught">Self-Taught</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="university">University/School *</label>
+                    <input type="text" id="university" name="university" placeholder="Stanford University" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="major">Major/Field of Study</label>
+                    <input type="text" id="major" name="major" placeholder="Computer Science">
+                </div>
+
+                <div class="form-group">
+                    <label for="graduation_year">Graduation Year</label>
+                    <input type="number" id="graduation_year" name="graduation_year" placeholder="2023" min="1950" max="2050">
+                </div>
+
+                <div class="form-group">
+                    <label for="additional_certifications">Additional Certifications</label>
+                    <textarea id="additional_certifications" name="additional_certifications" rows="3" placeholder="AWS Certified Solutions Architect, Google Cloud Associate, etc. (one per line)"></textarea>
+                </div>
+            </section>
+
+            <!-- Professional Experience -->
+            <section class="card">
+                <h2>💼 Professional Experience</h2>
+                
+                <div class="form-group">
+                    <label for="current_title">Current Job Title</label>
+                    <input type="text" id="current_title" name="current_title" placeholder="Senior Software Engineer">
+                </div>
+
+                <div class="form-group">
+                    <label for="current_company">Current Company</label>
+                    <input type="text" id="current_company" name="current_company" placeholder="Google">
+                </div>
+
+                <div class="form-group">
+                    <label for="total_experience">Total Years of Experience *</label>
+                    <input type="number" id="total_experience" name="total_experience" placeholder="5" min="0" max="70" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="work_experience">Work Experience Summary</label>
+                    <textarea id="work_experience" name="work_experience" rows="4" placeholder="Brief overview of your professional journey and key achievements..."></textarea>
+                </div>
+            </section>
+
+            <!-- Achievements & Awards -->
+            <section class="card">
+                <h2>🏆 Achievements & Awards</h2>
+                
+                <div class="form-group">
+                    <label for="achievements">Notable Achievements</label>
+                    <textarea id="achievements" name="achievements" rows="4" placeholder="Awards, recognitions, publications, or major accomplishments (one per line)"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="projects">Notable Projects</label>
+                    <textarea id="projects" name="projects" rows="4" placeholder="High-impact projects you've worked on (one per line)"></textarea>
+                </div>
+            </section>
+
+            <!-- Languages -->
+            <section class="card">
+                <h2>🌍 Languages</h2>
+                
+                <div class="form-group">
+                    <label for="languages">Languages Spoken</label>
+                    <textarea id="languages" name="languages" rows="2" placeholder="English (Native), Spanish (Fluent), Mandarin (Intermediate) (one per line)"></textarea>
+                </div>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large">Save & Generate Portfolio</button>
+                <button type="button" onclick="goBack()" class="btn btn-secondary">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/portfolio-info.js"></script>
+</body>
+</html>

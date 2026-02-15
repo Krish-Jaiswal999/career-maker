@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Resources - Career Path Planner</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="roadmap.html" class="nav-link">Roadmap</a>
+                <a href="resources.html" class="nav-link active">Resources</a>
+                <a href="portfolio.html" class="nav-link">Portfolio</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <h1>Learning Resources</h1>
+        <p>Curated learning resources for each skill in your roadmap</p>
+        
+        <div id="loading" class="card">
+            <p>Loading resources...</p>
+        </div>
+
+        <div id="resources-container"></div>
+
+        <section class="card">
+            <h2>Need More Help?</h2>
+            <ul style="margin-left: 1.5rem;">
+                <li><a href="https://www.coursera.org">Coursera</a> - University-level courses</li>
+                <li><a href="https://www.udemy.com">Udemy</a> - Affordable online courses</li>
+                <li><a href="https://www.youtube.com">YouTube</a> - Free tutorials</li>
+                <li><a href="https://github.com">GitHub</a> - Real projects to learn from</li>
+                <li><a href="https://stackoverflow.com">Stack Overflow</a> - Community Q&A</li>
+            </ul>
+        </section>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/resources.js"></script>
+</body>
+</html>

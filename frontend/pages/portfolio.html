@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Career Path Planner</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="roadmap.html" class="nav-link">Roadmap</a>
+                <a href="portfolio.html" class="nav-link active">Portfolio</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <h1>📄 Portfolio Builder</h1>
+        
+        <section class="card">
+            <h2>Getting Started</h2>
+            <p>Create a professional portfolio showcasing your skills and experience.</p>
+            <button type="button" onclick="goToPortfolioInfo()" class="btn btn-primary btn-large">📋 Fill Your Information</button>
+            <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                We'll collect your education, experience, and social profiles to build a comprehensive portfolio.
+            </p>
+        </section>
+        
+        <section class="card" id="template-section" style="display: none;">
+            <h2>Choose Portfolio Template</h2>
+            <div class="template-grid">
+                <div class="template-card" onclick="selectTemplate('faang')">
+                    <h3>🏢 FAANG Style</h3>
+                    <p>Professional tech company style</p>
+                </div>
+                <div class="template-card" onclick="selectTemplate('startup')">
+                    <h3>🚀 Startup</h3>
+                    <p>Modern, colorful startup style</p>
+                </div>
+                <div class="template-card" onclick="selectTemplate('researcher')">
+                    <h3>🔬 Researcher</h3>
+                    <p>Academic/research focused</p>
+                </div>
+                <div class="template-card" onclick="selectTemplate('minimal')">
+                    <h3>✨ Minimal</h3>
+                    <p>Clean and minimal design</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card" id="preview-section" style="display: none;">
+            <h2>Portfolio Preview</h2>
+            <iframe id="portfolio-preview" style="width: 100%; height: 700px; border: 1px solid #ddd;"></iframe>
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <button type="button" onclick="exportPortfolio()" class="btn btn-primary">📥 Export HTML</button>
+                <button type="button" onclick="publishPortfolio()" class="btn btn-primary">🌐 Publish Online</button>
+                <button type="button" onclick="editInfo()" class="btn btn-secondary">✏️ Edit Information</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/portfolio.js"></script>
+</body>
+</html>

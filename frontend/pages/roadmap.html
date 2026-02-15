@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap - Career Path Planner</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-menu">
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="roadmap.html" class="nav-link active">Roadmap</a>
+                <a href="resources.html" class="nav-link">Resources</a>
+                <a href="portfolio.html" class="nav-link">Portfolio</a>
+                <a href="#" onclick="logout()" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container main-container">
+        <h1>Your Learning Roadmap</h1>
+        
+        <!-- Progress Overview -->
+        <section class="card">
+            <h2>📊 Your Progress</h2>
+            <div id="progress-container"></div>
+        </section>
+        
+        <div id="roadmap-timeline" class="timeline">
+            <!-- Phases will be inserted here -->
+        </div>
+
+        <section class="card">
+            <h2>Roadmap Details</h2>
+            <div id="phases-container"></div>
+        </section>
+
+        <section class="card">
+            <h2>Recommended Projects</h2>
+            <div id="projects-container" class="projects-grid"></div>
+        </section>
+
+        <section class="card">
+            <h2>Learning Resources</h2>
+            <div id="resources-container"></div>
+        </section>
+
+        <button type="button" onclick="generatePortfolio()" class="btn btn-primary">Generate Portfolio</button>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/roadmap.js"></script>
+</body>
+</html>

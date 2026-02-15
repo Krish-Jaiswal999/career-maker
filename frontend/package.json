@@ -1,0 +1,22 @@
+{
+  "name": "career-path-planner",
+  "version": "1.0.0",
+  "description": "GenAI Career Path Planner - Frontend dependencies",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "http-server -p 3000 -c-1",
+    "serve": "python -m http.server 3000"
+  },
+  "keywords": [
+    "career",
+    "learning",
+    "ai",
+    "roadmap"
+  ],
+  "author": "Career Path Planner Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
