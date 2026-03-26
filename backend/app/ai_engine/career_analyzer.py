@@ -69,8 +69,9 @@ class CareerAnalyzer:
             "flask": "API Framework",
             "django": "API Framework",
             "express": "API Framework",
-            "node.js": "API Framework",
-            "nodejs": "API Framework",
+            "node.js": "Node.js",
+            "nodejs": "Node.js",
+            "express.js": "API Framework",
         }
         
         self.skill_categories = {
@@ -108,6 +109,10 @@ class CareerAnalyzer:
             "devops": ["Container", "Cloud Platform", "Linux", "CI/CD", "Infrastructure as Code"],
             "frontend engineer": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
             "frontend": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
+            "mern stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mern": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mean stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mean": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
             "cloud architect": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
             "cloud": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
         }
@@ -135,7 +140,9 @@ class CareerAnalyzer:
             "current_skills": current_skills,
             "skill_gaps": gaps,
             "proficiency_gaps": len(gaps),
-            "completion_percentage": ((len(normalized_current) / len(needed_set)) * 100) if needed_set else 0
+            "total_required_skills": len(needed_set),
+            "learned_skills_count": len(needed_set) - len(gaps),
+            "completion_percentage": ((len(needed_set) - len(gaps)) / len(needed_set) * 100) if needed_set else 0
         }
     
     def map_career_trajectory(self, goal: str) -> Dict:

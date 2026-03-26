@@ -156,7 +156,7 @@ curl -X POST http://localhost:8000/api/generate-portfolio-html \
 - Email (required)
 - LinkedIn URL
 - GitHub URL
-- Personal portfolio URL
+- Personal portfolio URL **(optional)**
 - Twitter URL
 - Personal website
 

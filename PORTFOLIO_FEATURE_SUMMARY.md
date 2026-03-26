@@ -8,7 +8,7 @@ Successfully implemented a comprehensive portfolio information collection and ge
 ### 1. **Database Model** (`backend/app/database/models.py`)
 Created `PortfolioInfo` model with 45+ fields organized in logical sections:
 - **Personal Information**: phone, city, state, country, professional_summary
-- **Contact & Social**: email, LinkedIn, GitHub, portfolio_url, Twitter
+- **Contact & Social**: email, LinkedIn, GitHub, portfolio_url (optional), Twitter
 - **Education**: degree level, university, major, graduation_year, certifications
 - **Professional Experience**: current title, company, total years, work history
 - **Achievements**: achievements list, projects list

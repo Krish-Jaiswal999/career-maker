@@ -4,7 +4,7 @@ Authentication & User Management API Routes
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from app.database.database import get_db
 from app.database.models import User, Profile
@@ -103,6 +103,32 @@ def create_profile(
     db.commit()
     db.refresh(existing_profile)
     
+    # Regenerate roadmap if profile was updated
+    from app.ai_engine.career_analyzer import RoadmapGenerator
+    from app.database.models import Roadmap
+    
+    generator = RoadmapGenerator()
+    roadmap_data = generator.generate_roadmap(
+        career_goal=existing_profile.career_goal,
+        current_skills=existing_profile.current_skills,
+        years_exp=existing_profile.years_experience
+    )
+    
+    # Update or create roadmap
+    existing_roadmap = db.query(Roadmap).filter(Roadmap.user_id == current_user.id).first()
+    if existing_roadmap:
+        existing_roadmap.goal = existing_profile.career_goal
+        existing_roadmap.phases = roadmap_data["phases"]
+    else:
+        db_roadmap = Roadmap(
+            user_id=current_user.id,
+            goal=existing_profile.career_goal,
+            phases=roadmap_data["phases"]
+        )
+        db.add(db_roadmap)
+    
+    db.commit()
+    
     return ProfileOut.from_orm(existing_profile)
 
 @router.get("/profile", response_model=ProfileOut)
@@ -117,3 +143,113 @@ def get_profile(
         raise HTTPException(status_code=404, detail="Profile not found")
     
     return ProfileOut.from_orm(profile)
+
+# Password Reset Endpoints
+
+@router.post("/forgot-password")
+def forgot_password(email: str, db: Session = Depends(get_db)):
+    """
+    Request password reset - sends OTP to email
+    """
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        # Return a specific message for non-existent users
+        return {"message": "No account found with this email. Would you like to sign up?", "action": "signup_required"}
+    
+    # Generate OTP and send email
+    otp = AuthService.generate_otp()
+    user.reset_otp = otp
+    user.otp_expiry = datetime.utcnow() + timedelta(minutes=10)
+    user.otp_attempts = 0
+    db.commit()
+    
+    # Send OTP email
+    from app.email_service import EmailService
+    email_service = EmailService()
+    email_service.send_otp_email(user.email, otp, user.full_name)
+    
+    return {"message": "If email exists, OTP has been sent"}
+
+@router.post("/verify-otp")
+def verify_otp(data: dict, db: Session = Depends(get_db)):
+    """
+    Verify OTP sent to user's email
+    """
+    email = data.get("email")
+    otp = data.get("otp")
+    
+    if not email or not otp:
+        raise HTTPException(status_code=400, detail="Email and OTP are required")
+    
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check OTP
+    if not user.reset_otp or not user.otp_expiry:
+        raise HTTPException(status_code=400, detail="No password reset request found")
+    
+    if datetime.utcnow() > user.otp_expiry:
+        user.reset_otp = None
+        user.otp_expiry = None
+        db.commit()
+        raise HTTPException(status_code=400, detail="OTP has expired. Request a new one.")
+    
+    if user.otp_attempts >= 3:
+        raise HTTPException(status_code=429, detail="Too many failed attempts. Request a new OTP.")
+    
+    if user.reset_otp != otp:
+        user.otp_attempts += 1
+        db.commit()
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+    
+    return {"message": "OTP verified successfully", "verified": True}
+
+@router.post("/reset-password")
+def reset_password(data: dict, db: Session = Depends(get_db)):
+    """
+    Reset password using verified OTP
+    """
+    email = data.get("email")
+    otp = data.get("otp")
+    new_password = data.get("new_password")
+    
+    if not email or not otp or not new_password:
+        raise HTTPException(status_code=400, detail="Email, OTP, and new password are required")
+    
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Verify OTP
+    if not user.reset_otp or not user.otp_expiry:
+        raise HTTPException(status_code=400, detail="No password reset request found")
+    
+    if datetime.utcnow() > user.otp_expiry:
+        user.reset_otp = None
+        user.otp_expiry = None
+        db.commit()
+        raise HTTPException(status_code=400, detail="OTP has expired. Request a new one.")
+    
+    if user.reset_otp != otp:
+        user.otp_attempts += 1
+        db.commit()
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+    
+    # Validate new password
+    if len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters long")
+    
+    # Update password
+    user.password_hash = AuthService.hash_password(new_password)
+    user.reset_otp = None
+    user.otp_expiry = None
+    user.otp_attempts = 0
+    db.commit()
+    
+    # Send confirmation email
+    from app.email_service import EmailService
+    email_service = EmailService()
+    email_service.send_password_reset_confirmation(user.email, user.full_name)
+    
+    return {"message": "Password reset successfully"}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "name": "career-path-planner-frontend",
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

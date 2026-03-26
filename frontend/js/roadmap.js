@@ -212,7 +212,7 @@ async function loadProgressOverview() {
             ? roadmapSkills.map(s => ({skill: s}))
             : learningPath.skills_to_learn;
         
-        const skillsCount = learningPath.current_skills.length;
+        const skillsCount = learningPath.learned_skills_count !== undefined ? learningPath.learned_skills_count : Math.round(learningPath.progress_percentage / 100 * learningPath.total_skills_needed);
         const totalSkills = learningPath.total_skills_needed;
         const progressPercent = Math.round(learningPath.progress_percentage);
         

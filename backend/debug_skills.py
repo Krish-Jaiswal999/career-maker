@@ -10,10 +10,31 @@ if profile:
     print('Skills in DB:', profile.current_skills)
     print('Goal in DB:', profile.career_goal)
     
-    print('\n=== SKILL GAP ANALYSIS ===')
+    print('\n=== TESTING MERN STACK ===')
+    test_skills = ['Python', 'MySQL', 'JavaScript']
+    test_goal = 'MERN stack developer'
+    print(f'Testing with skills: {test_skills}, goal: {test_goal}')
     analyzer = CareerAnalyzer()
+    
+    # Debug normalization
+    normalized_current = set()
+    for skill in test_skills:
+        normalized = analyzer.normalize_skill(skill)
+        print(f"Skill '{skill}' -> normalized '{normalized}' -> lower '{normalized.lower()}'")
+        normalized_current.add(normalized.lower())
+    
+    print(f"Normalized current skills set: {normalized_current}")
+    
+    gaps = analyzer.detect_skill_gaps(test_goal, test_skills)
+    print('Detected gaps:', gaps['skill_gaps'])
+    print('Total required skills:', gaps['total_required_skills'])
+    print('Completion percentage:', gaps['completion_percentage'])
+    
+    print('\n=== SKILL GAP ANALYSIS ===')
     gaps = analyzer.detect_skill_gaps(profile.career_goal, profile.current_skills)
     print('Detected gaps:', gaps['skill_gaps'])
+    print('Total required skills:', gaps['total_required_skills'])
+    print('Completion percentage:', gaps['completion_percentage'])
     
     print('\n=== ROADMAP GENERATION ===')
     gen = RoadmapGenerator()

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: career-maker-backend
+    env: python
+    plan: free
+    region: oregon
+    repo: "${REPO}" # replace in Render dashboard or with your own repo url
+    branch: main
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:$PORT"
+    workingDirectory: backend
+    envVars:
+      - key: DATABASE_URL
+        value: "sqlite:///./data.db"
+      - key: SECRET_KEY
+        value: "replace-with-production-secret"

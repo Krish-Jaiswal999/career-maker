@@ -196,7 +196,9 @@ async function loadProgress() {
     
     try {
         const learningPath = await API.getLearningPath();
-        const skillsCount = learningPath.current_skills.length;
+        console.log('Learning path data:', learningPath);
+        const skillsCount = learningPath.learned_skills_count !== undefined ? learningPath.learned_skills_count : Math.round(learningPath.progress_percentage / 100 * learningPath.total_skills_needed);
+        console.log('Skills count:', skillsCount);
         const skillsToLearn = learningPath.skills_to_learn;
         const totalSkills = learningPath.total_skills_needed;
         const progressPercent = Math.round(learningPath.progress_percentage);

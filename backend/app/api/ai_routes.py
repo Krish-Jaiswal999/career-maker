@@ -186,11 +186,14 @@ def get_learning_path(
             "status": "learned"
         })
     
-    return {
+    response = {
         "career_goal": profile.career_goal,
         "current_skills": current_skills_data,
         "skills_to_learn": skills_with_resources,
-        "total_skills_needed": len(gaps["skill_gaps"]) + len(profile.current_skills),
+        "total_skills_needed": gaps["total_required_skills"],
         "progress_percentage": gaps["completion_percentage"],
         "roadmap": roadmap.phases if roadmap else None
     }
+    
+    print(f"Debug: response={response}")
+    return response
