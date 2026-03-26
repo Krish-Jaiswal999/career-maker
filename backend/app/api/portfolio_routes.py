@@ -308,9 +308,13 @@ async def generate_portfolio_html(
         "skills": skills,
         "projects": projects,
         "experience": experience,
+        "current_title": portfolio_info.current_title or "",
+        "current_company": portfolio_info.current_company or "",
         "education": [{"degree": portfolio_info.highest_degree or "", "field": portfolio_info.major or "", "institution": portfolio_info.university or "", "year": portfolio_info.graduation_year}] if (portfolio_info.highest_degree or portfolio_info.university) else [] ,
-        "github_url": portfolio_info.github_url or user.github_url or "#",
-        "linkedin_url": portfolio_info.linkedin_url or user.linkedin_url or "#"
+        "github_url": portfolio_info.github_url if portfolio_info.github_url else "",
+        "linkedin_url": portfolio_info.linkedin_url if portfolio_info.linkedin_url else "",
+        "achievements": portfolio_info.achievements or "",
+        "languages": portfolio_info.languages or ""
     }
 
     generator = PortfolioGenerator()

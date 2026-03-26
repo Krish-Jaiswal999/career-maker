@@ -63,6 +63,9 @@ document.getElementById('career-form')?.addEventListener('submit', async (e) => 
         // Show analysis section
         document.getElementById('analysis-section').style.display = 'block';
         
+        // Update keyword suggestions
+        updateKeywordSuggestions(career_goal);
+        
         // Analyze career
         const analysis = await API.analyzeCareer(career_goal);
         displayAnalysis(analysis);
@@ -77,6 +80,9 @@ function displayProfile(profile) {
     document.getElementById('goal-text').textContent = profile.career_goal;
     userSkills = profile.current_skills || [];
     updateSkillsDisplay();
+    
+    // Update keyword suggestions based on career goal
+    updateKeywordSuggestions(profile.career_goal);
 }
 
 function addSkill() {
@@ -241,4 +247,145 @@ async function loadProgress() {
             <p>${skillsCount} of ${totalSkills} skills added (${Math.round(percentComplete)}%)</p>
         `;
     }
+}
+
+// Keyword Analyzer - Comprehensive suggestions for all career fields
+const keywordSuggestions = {
+    // IT & Tech
+    'software engineer': ['JavaScript', 'Python', 'React', 'Node.js', 'Git', 'SQL', 'REST APIs', 'Docker'],
+    'data scientist': ['Python', 'Machine Learning', 'Statistics', 'SQL', 'Pandas', 'TensorFlow', 'Data Visualization', 'NumPy'],
+    'web developer': ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'MongoDB', 'REST APIs', 'Bootstrap'],
+    'devops': ['Docker', 'Kubernetes', 'AWS', 'CI/CD', 'Linux', 'Git', 'Jenkins', 'Terraform'],
+    'product manager': ['Market Research', 'User Research', 'Analytics', 'SQL', 'Product Strategy', 'Roadmapping', 'Prototyping'],
+    'ui/ux designer': ['Figma', 'User Research', 'Wireframing', 'Prototyping', 'Design Systems', 'CSS', 'HTML', 'Usability Testing'],
+    'cloud architect': ['AWS', 'Azure', 'Google Cloud', 'Kubernetes', 'Docker', 'Terraform', 'Security', 'Networking'],
+    'machine learning': ['Python', 'TensorFlow', 'PyTorch', 'Statistics', 'Linear Algebra', 'Deep Learning', 'NLP', 'Computer Vision'],
+    'cybersecurity': ['Network Security', 'Encryption', 'Linux', 'Penetration Testing', 'Risk Management', 'Security Protocols', 'SIEM', 'Firewalls'],
+    'backend developer': ['Python', 'Java', 'Node.js', 'Databases', 'REST APIs', 'Microservices', 'Docker', 'Spring Boot'],
+    'frontend developer': ['JavaScript', 'React', 'Vue.js', 'CSS', 'HTML', 'TypeScript', 'Bootstrap', 'Webpack'],
+    
+    // Engineering
+    'mechanical engineer': ['CAD', 'SolidWorks', 'AutoCAD', 'Thermodynamics', 'Materials Science', 'MATLAB', 'Finite Element Analysis', 'Design'],
+    'civil engineer': ['AutoCAD', 'Structural Analysis', 'Project Management', 'Building Codes', 'REVIT', 'BIM', 'Surveying', 'Estimation'],
+    'electrical engineer': ['Circuit Design', 'SPICE Simulation', 'Power Systems', 'Embedded Systems', 'Arduino', 'PCB Design', 'Control Systems', 'MATLAB'],
+    'chemical engineer': ['Process Design', 'ASPEN', 'Thermodynamics', 'Heat Transfer', 'Mass Balance', 'Safety', 'HAZOP', 'Modeling'],
+    'engineer': ['CAD', 'Problem Solving', 'Technical Writing', 'Project Management', 'Safety Standards', 'Mathematics', 'Physics', 'Design Thinking'],
+    
+    // Business & Management
+    'project manager': ['Agile', 'Scrum', 'Communication', 'Risk Management', 'Budgeting', 'Leadership', 'Stakeholder Management', 'Jira'],
+    'marketing manager': ['SEO', 'Content Strategy', 'Social Media', 'Analytics', 'Email Marketing', 'Brand Strategy', 'Google Analytics', 'Copywriting'],
+    'sales manager': ['Negotiation', 'CRM', 'Salesforce', 'Team Management', 'Lead Generation', 'Closing Techniques', 'Forecasting', 'Communication'],
+    'business analyst': ['Requirements Analysis', 'Data Analysis', 'SQL', 'Excel', 'Visualization', 'Process Mapping', 'Communication', 'Documentation'],
+    'consultant': ['Problem Solving', 'Business Analysis', 'Communication', 'Excel', 'Presentation', 'Research', 'Strategic Thinking', 'Report Writing'],
+    
+    // Finance & Accounting
+    'accountant': ['Accounting', 'Excel', 'Tax Law', 'Auditing', 'Financial Reporting', 'GAAP', 'QuickBooks', 'Generally Accepted Accounting Principles'],
+    'financial analyst': ['Financial Analysis', 'Excel', 'Valuation', 'Risk Analysis', 'Budgeting', 'Investment Analysis', 'SQL', 'Power BI'],
+    'finance': ['Financial Analysis', 'Excel', 'Accounting', 'Valuation', 'Risk Analysis', 'Budgeting', 'Investment Analysis', 'Financial Modeling'],
+    
+    // Healthcare
+    'physician': ['Medical Diagnosis', 'Patient Care', 'Clinical Research', 'Medical Terminology', 'EHR Systems', 'Pharmacology', 'Evidence-Based Medicine', 'Communication'],
+    'nurse': ['Patient Care', 'Medical Terminology', 'EHR Systems', 'Clinical Nursing', 'Patient Safety', 'Critical Thinking', 'Communication', 'Compassion'],
+    'therapist': ['Patient Assessment', 'Treatment Planning', 'Clinical Skills', 'Psychology', 'Documentation', 'Empathy', 'Communication', 'Research Methods'],
+    
+    // Human Resources
+    'hr': ['Recruitment', 'Employee Relations', 'Payroll', 'Training & Development', 'HRIS', 'Labor Law', 'Performance Management', 'Compensation'],
+    'recruiter': ['Recruitment', 'Sourcing', 'Interviewing', 'Communication', 'ATS Systems', 'Market Knowledge', 'Networking', 'Sales Skills'],
+    
+    // Creative & Design
+    'graphic designer': ['Adobe Creative Suite', 'UI/UX Design', 'Branding', 'Typography', 'Color Theory', 'Figma', 'Illustrator', 'InDesign'],
+    'video editor': ['Adobe Premiere', 'Video Effects', 'Color Grading', 'Motion Graphics', 'Audio Editing', 'DaVinci Resolve', 'Storytelling', 'Pacing'],
+    'architect': ['CAD', 'Architecture Design', 'Building Codes', 'Project Management', 'Materials Science', 'Sustainability', '3D Modeling', 'REVIT'],
+    
+    // Marketing & Communications
+    'marketing': ['SEO', 'Content Strategy', 'Social Media', 'Analytics', 'Email Marketing', 'Marketing Automation', 'Brand Strategy', 'Copywriting'],
+    'journalist': ['Writing', 'Research', 'Interviewing', 'Fact-Checking', 'Communication', 'Publishing Platforms', 'News Judgment', 'Breaking News'],
+    'copywriter': ['Writing', 'Brand Voice', 'SEO', 'Persuasion', 'Research', 'Editing', 'Marketing Knowledge', 'Storytelling'],
+    
+    // Sales 
+    'sales': ['Negotiation', 'CRM', 'Salesforce', 'Communication', 'Lead Generation', 'Closing Techniques', 'Product Knowledge', 'Presentation'],
+    'sales representative': ['Negotiation', 'CRM', 'Communication', 'Lead Generation', 'Closing Techniques', 'Product Knowledge', 'Relationship Building', 'Follow-up'],
+    
+    // Education
+    'teacher': ['Curriculum Design', 'Teaching Methods', 'Student Assessment', 'Communication', 'Classroom Management', 'Subject Matter Expertise', 'Mentoring', 'Patience'],
+    'professor': ['Research', 'Publishing', 'Curriculum Design', 'Mentoring', 'Subject Matter Expertise', 'Academic Writing', 'Presentation', 'Peer Collaboration'],
+    'educator': ['Teaching', 'Curriculum Design', 'Assessment', 'Communication', 'Subject Expertise', 'Student Engagement', 'Feedback', 'Patience'],
+    
+    // Legal
+    'lawyer': ['Legal Research', 'Contract Drafting', 'Communication', 'Case Management', 'Writing', 'Negotiation', 'Compliance', 'Legal Ethics'],
+    'legal assistant': ['Legal Research', 'Document Preparation', 'Client Support', 'Organization', 'Legal Terminology', 'Communication', 'Writing', 'Attention to Detail'],
+    
+    // Other
+    'hospitality': ['Customer Service', 'Team Management', 'Event Planning', 'Communication', 'Problem-Solving', 'Food Safety', 'Booking Systems', 'Training'],
+    'chef': ['Culinary Skills', 'Menu Planning', 'Food Safety', 'Kitchen Management', 'Plating', 'Recipe Development', 'Team Leadership', 'Creativity'],
+    'real estate': ['Market Knowledge', 'Negotiation', 'CRM', 'Communication', 'Property Analysis', 'Sales', 'Legal Knowledge', 'Networking']
+};
+
+function updateKeywordSuggestions(careerGoal) {
+    const container = document.getElementById('keyword-suggestions');
+    if (!container) return;
+    
+    const goalLower = careerGoal.toLowerCase();
+    let suggestions = [];
+    
+    // Find matching suggestions - check for exact and partial matches
+    for (const [key, value] of Object.entries(keywordSuggestions)) {
+        if (goalLower.includes(key)) {
+            suggestions = value;
+            break;
+        }
+    }
+    
+    // If no exact match, try to find keywords that are contained in the career goal
+    if (suggestions.length === 0) {
+        // Extract key words from goal and try to match
+        const goalKeywords = goalLower.split(' ').filter(w => w.length > 3);
+        for (const keyword of goalKeywords) {
+            for (const [key, value] of Object.entries(keywordSuggestions)) {
+                if (key.includes(keyword)) {
+                    suggestions = value;
+                    break;
+                }
+            }
+            if (suggestions.length > 0) break;
+        }
+    }
+    
+    // Fallback: generic professional skills
+    if (suggestions.length === 0) {
+        suggestions = ['Problem Solving', 'Communication', 'Leadership', 'Project Management', 'Time Management', 'Team Collaboration', 'Critical Thinking', 'Adaptability'];
+    }
+    
+    // Filter out skills already added
+    const filteredSuggestions = suggestions.filter(s => !userSkills.includes(s));
+    
+    if (filteredSuggestions.length === 0) {
+        container.innerHTML = '<span style="color: #999; font-size: 0.9rem;">All suggested skills have been added!</span>';
+        return;
+    }
+    
+    let html = '';
+    filteredSuggestions.forEach(skill => {
+        html += `
+            <button type="button" onclick="quickAddSkill('${skill}')" style="
+                background: #e8f0ff;
+                border: 1px solid #667eea;
+                color: #667eea;
+                padding: 6px 12px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s;
+            " onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='#e8f0ff'; this.style.color='#667eea';">
+                + ${skill}
+            </button>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function quickAddSkill(skill) {
+    document.getElementById('skill-input').value = skill;
+    addSkill();
 }

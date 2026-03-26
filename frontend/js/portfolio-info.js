@@ -102,7 +102,15 @@ document.getElementById('portfolio-form').addEventListener('submit', async (e) =
         window.location.href = 'portfolio.html';
     } catch (error) {
         console.error('Failed to save portfolio information:', error);
-        alert('Failed to save portfolio information. Please try again.');
+        let errorMessage = 'Failed to save portfolio information. ';
+        if (error.message) {
+            errorMessage += error.message;
+        } else if (error.detail) {
+            errorMessage += error.detail;
+        } else {
+            errorMessage += 'Please try again.';
+        }
+        alert(errorMessage);
     }
 });
 

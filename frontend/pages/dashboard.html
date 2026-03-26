@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-brand" onclick="window.location.href='../'" style="cursor: pointer;">🚀 GenAI Career Planner</div>
             <div class="nav-menu">
                 <a href="dashboard.html" class="nav-link active">Dashboard</a>
                 <a href="roadmap.html" class="nav-link">Roadmap</a>
@@ -45,9 +45,22 @@
             <!-- Skills Section -->
             <section class="card">
                 <h2>Your Skills</h2>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                    Tip: Use the Keyword Analyzer below to discover relevant skills for your career goal.
+                </p>
                 <div id="skills-list" class="skills-container"></div>
                 <input type="text" id="skill-input" placeholder="Add a new skill">
                 <button type="button" onclick="addSkill()" class="btn btn-secondary">Add Skill</button>
+                
+                <!-- Keyword Analyzer -->
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">
+                        <strong>🔍 Keyword Analyzer:</strong> Suggested skills based on your goal
+                    </p>
+                    <div id="keyword-suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem;">
+                        <span style="color: #999; font-size: 0.9rem;">Add a career goal to see suggestions</span>
+                    </div>
+                </div>
             </section>
         </div>
 

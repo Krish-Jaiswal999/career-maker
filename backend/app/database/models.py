@@ -135,20 +135,20 @@ class PortfolioInfo(Base):
     university = Column(String)
     major = Column(String)
     graduation_year = Column(Integer, nullable=True)
-    additional_certifications = Column(JSON, nullable=True)  # [{name, issuer, date}]
+    additional_certifications = Column(Text, nullable=True)  # [{name, issuer, date}]
     
     # Professional Experience
     current_title = Column(String, nullable=True)
     current_company = Column(String, nullable=True)
     total_experience = Column(Integer, default=0)  # Years
-    work_experience = Column(JSON, nullable=True)  # [{title, company, years, description}]
+    work_experience = Column(Text, nullable=True)  # [{title, company, years, description}]
     
     # Achievements & Awards
-    achievements = Column(JSON, nullable=True)  # [{title, description, date}]
-    projects = Column(JSON, nullable=True)  # [{name, description, skills, link}]
+    achievements = Column(Text, nullable=True)  # [{title, description, date}]
+    projects = Column(Text, nullable=True)  # [{name, description, skills, link}]
     
     # Languages
-    languages = Column(JSON, nullable=True)  # [{language, proficiency}]
+    languages = Column(Text, nullable=True)  # [{language, proficiency}]
     
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
