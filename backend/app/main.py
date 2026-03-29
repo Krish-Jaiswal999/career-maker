@@ -6,6 +6,7 @@ Career Path Planner Backend
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+import json
 import os
 from dotenv import load_dotenv
 
@@ -25,11 +26,21 @@ app = FastAPI(
 )
 
 # CORS middleware
-# For development/testing allow all origins to avoid preflight issues.
-# In production set ALLOWED_ORIGINS in .env and restore stricter policy.
+# In production set ALLOWED_ORIGINS in .env to your deployed domain(s).
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "[]")
+try:
+    allowed_origins = json.loads(allowed_origins)
+    if isinstance(allowed_origins, str):
+        allowed_origins = [allowed_origins]
+except json.JSONDecodeError:
+    allowed_origins = [origin.strip() for origin in allowed_origins.split(',') if origin.strip()]
+
+if not allowed_origins and os.getenv("ENVIRONMENT", "development") != "production":
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

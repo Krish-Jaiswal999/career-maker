@@ -5,8 +5,10 @@ AI Engine for Career Path Analysis
 - Industry path mapping
 """
 
-from typing import List, Dict
+from typing import List, Dict, Optional
 import json
+
+from .role_skill_api import RoleSkillAPIClient
 
 class CareerAnalyzer:
     """Analyzes career goals and current skills"""
@@ -64,6 +66,36 @@ class CareerAnalyzer:
             "numpy": "Data Processing",
             "scipy": "Data Processing",
             
+            # CAD / Design
+            "solidworks": "SolidWorks",
+            "autocad": "CAD",
+            "catia": "CAD",
+            "inventor": "CAD",
+            "proe": "CAD",
+            "cad": "CAD",
+            "gd&t": "GD&T",
+            
+            # HVAC
+            "hvac": "HVAC Design",
+            "thermodynamics": "Thermodynamics",
+            "energy modeling": "Energy Modeling",
+            
+            # Manufacturing / Production
+            "lean": "Lean Manufacturing",
+            "kaizen": "Lean Manufacturing",
+            "quality control": "Quality Control",
+            "process improvement": "Process Improvement",
+            
+            # Culinary / Hospitality
+            "cooking": "Culinary Skills",
+            "food safety": "Food Safety",
+            "menu planning": "Menu Planning",
+            
+            # Fire / Safety
+            "fire safety": "Fire Safety",
+            "emergency response": "Emergency Response",
+            "inspection": "Inspection",
+            
             # API Frameworks
             "fastapi": "API Framework",
             "flask": "API Framework",
@@ -83,6 +115,90 @@ class CareerAnalyzer:
             "devops": ["Docker", "Kubernetes", "AWS", "GCP", "Terraform"],
             "soft_skills": ["Leadership", "Communication", "Project Management", "Problem Solving"]
         }
+
+        self.career_skill_map = {
+            "machine learning engineer": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
+            "machine learning": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
+            "ml engineer": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
+            "ml engineering": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
+            "data scientist": ["Python", "SQL", "Data Processing", "Machine Learning", "Data Visualization"],
+            "data science": ["Python", "SQL", "Data Processing", "Machine Learning", "Data Visualization"],
+            "full stack developer": ["JavaScript", "Frontend Framework", "API Framework", "SQL", "Container"],
+            "fullstack": ["JavaScript", "Frontend Framework", "API Framework", "SQL", "Container"],
+            "backend engineer": ["Python", "API Framework", "SQL", "NoSQL", "Cloud Platform"],
+            "backend": ["Python", "API Framework", "SQL", "NoSQL", "Cloud Platform"],
+            "software engineer": ["Python", "API Framework", "SQL", "Cloud Platform", "Problem Solving"],
+            "software developer": ["Python", "API Framework", "SQL", "Cloud Platform", "Problem Solving"],
+            "data engineer": ["Python", "SQL", "ETL", "Data Warehousing", "Cloud Platform"],
+            "qa engineer": ["Test Automation", "Quality Assurance", "Bug Tracking", "Scripting", "Reporting"],
+            "quality assurance engineer": ["Test Automation", "Quality Assurance", "Bug Tracking", "Scripting", "Reporting"],
+            "mechanical design engineer": ["CAD", "SolidWorks", "GD&T", "Materials Science", "Design for Manufacturing"],
+            "mechanical engineer": ["CAD", "SolidWorks", "Engineering Drawings", "Materials Science", "Design for Manufacturing"],
+            "product development engineer": ["Product Design", "Prototyping", "Requirements Analysis", "CAD", "Testing"],
+            "manufacturing engineer": ["Process Design", "Lean Manufacturing", "Quality Control", "Automation", "Production Planning"],
+            "hvac engineer": ["HVAC Design", "Thermodynamics", "Building Codes", "Energy Modeling", "Ductwork Controls"],
+            "fire engineer": ["Fire Safety", "Risk Assessment", "Building Codes", "Fire Protection Systems", "Emergency Response"],
+            "fire investigator": ["Incident Investigation", "Fire Cause Analysis", "Evidence Collection", "Report Writing", "Fire Safety"],
+            "chef": ["Culinary Skills", "Menu Planning", "Food Safety", "Kitchen Management", "Plating"],
+            "automotive engineer": ["Vehicle Systems", "CAD", "Diagnostics", "Materials Engineering", "Testing"],
+            "sweeper": ["Cleaning Procedures", "Equipment Operation", "Safety", "Time Management", "Waste Disposal"],
+            "janitor": ["Cleaning Procedures", "Equipment Operation", "Safety", "Time Management", "Waste Disposal"],
+            "cleaner": ["Cleaning Procedures", "Equipment Operation", "Safety", "Time Management", "Waste Disposal"],
+            "devops engineer": ["Container", "Cloud Platform", "Linux", "CI/CD", "Infrastructure as Code"],
+            "devops": ["Container", "Cloud Platform", "Linux", "CI/CD", "Infrastructure as Code"],
+            "frontend engineer": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
+            "frontend": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
+            "mern stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mern": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mean stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "mean": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
+            "cloud architect": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
+            "cloud": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
+            "marketing manager": ["Marketing Strategy", "Campaign Planning", "Digital Marketing", "Analytics", "Communication"],
+            "sales executive": ["Sales Strategy", "Customer Relationship Management", "Negotiation", "Communication", "Reporting"],
+            "human resources manager": ["Recruitment", "Employee Relations", "HR Compliance", "Performance Management", "Communication"],
+            "graphic designer": ["Visual Design", "Typography", "Branding", "Adobe Creative Suite", "Layout"],
+            "business analyst": ["Requirements Gathering", "Process Modeling", "Data Analysis", "Stakeholder Communication", "Reporting"],
+            "financial analyst": ["Financial Modeling", "Excel", "Forecasting", "Data Analysis", "Reporting"],
+            "project manager": ["Project Planning", "Risk Management", "Stakeholder Communication", "Time Management", "Budgeting"],
+            "product manager": ["Product Strategy", "Market Research", "Roadmapping", "Stakeholder Alignment", "Metrics"],
+            "teacher": ["Curriculum Planning", "Lesson Delivery", "Classroom Management", "Assessment Design", "Communication"],
+            "nurse": ["Patient Care", "Clinical Procedures", "Medical Documentation", "Team Collaboration", "Health & Safety"],
+            "accountant": ["Financial Reporting", "Tax Compliance", "Bookkeeping", "Excel", "Audit Process"],
+            "customer service representative": ["Customer Experience", "Communication", "Problem Solving", "CRM Tools", "Conflict Resolution"],
+            "operations manager": ["Operations Planning", "Process Improvement", "Resource Allocation", "KPI Management", "Team Leadership"],
+            "data analyst": ["SQL", "Excel", "Data Visualization", "Reporting", "Statistics"],
+            "ux designer": ["User Research", "Wireframing", "Prototyping", "Interaction Design", "Usability Testing"],
+        }
+
+        self.career_trajectory_map = {
+            "machine learning engineer": ["Data Fundamentals", "Model Development", "Deployment & Monitoring", "Optimization"],
+            "data scientist": ["Data Collection", "Exploratory Analysis", "Modeling", "Insight Communication"],
+            "data engineer": ["Data Architecture", "ETL Development", "Pipeline Optimization", "Scalable Infrastructure"],
+            "full stack developer": ["Frontend Development", "Backend Development", "Integration", "Deployment"],
+            "backend engineer": ["Backend Architecture", "API Development", "Data Management", "Performance Tuning"],
+            "software engineer": ["Foundations", "Design & Implementation", "System Integration", "Scaling"],
+            "devops engineer": ["Infrastructure Setup", "Automation", "Monitoring", "Resilience"],
+            "cloud architect": ["Cloud Fundamentals", "Architecture Design", "Security & Governance", "Optimization"],
+            "project manager": ["Initiation", "Planning", "Execution", "Delivery"],
+            "product manager": ["Research", "Strategy", "Execution", "Launch"],
+            "marketing manager": ["Audience Research", "Campaign Design", "Execution", "Measurement"],
+            "sales executive": ["Prospecting", "Qualification", "Closing", "Account Growth"],
+            "business analyst": ["Requirements Gathering", "Analysis", "Recommendations", "Stakeholder Alignment"],
+            "financial analyst": ["Financial Planning", "Analysis", "Forecasting", "Reporting"],
+            "graphic designer": ["Research", "Concept Development", "Design Execution", "Delivery"],
+            "ux designer": ["Research", "Wireframing", "Prototyping", "Testing"],
+            "teacher": ["Curriculum Development", "Lesson Preparation", "Instruction", "Assessment"],
+            "nurse": ["Clinical Foundations", "Patient Care", "Care Coordination", "Professional Growth"],
+            "accountant": ["Accounting Basics", "Reporting", "Compliance", "Advisory"],
+            "customer service representative": ["Customer Communication", "Problem Resolution", "Service Improvement", "Relationship Building"],
+            "operations manager": ["Process Mapping", "Planning", "Execution", "Continuous Improvement"],
+            "mechanical engineer": ["Concept Design", "Detailed Engineering", "Testing", "Implementation"],
+            "chef": ["Culinary Foundations", "Menu Development", "Kitchen Leadership", "Culinary Innovation"],
+            "fire investigator": ["Incident Response", "Evidence Collection", "Analysis", "Reporting"],
+        }
+
+        self.role_skill_api = RoleSkillAPIClient()
     
     def normalize_skill(self, skill: str) -> str:
         """Normalize a skill to its canonical form (handles aliases/variants)"""
@@ -94,32 +210,15 @@ class CareerAnalyzer:
     def detect_skill_gaps(self, career_goal: str, current_skills: List[str]) -> Dict:
         """Detect skills needed for the career goal"""
         
-        career_skill_map = {
-            "machine learning engineer": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
-            "machine learning": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
-            "ml engineer": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
-            "ml engineering": ["Python", "Deep Learning", "Statistics", "SQL", "Data Processing"],
-            "data scientist": ["Python", "SQL", "Data Processing", "Machine Learning", "Data Visualization"],
-            "data science": ["Python", "SQL", "Data Processing", "Machine Learning", "Data Visualization"],
-            "full stack developer": ["JavaScript", "Frontend Framework", "API Framework", "SQL", "Container"],
-            "fullstack": ["JavaScript", "Frontend Framework", "API Framework", "SQL", "Container"],
-            "backend engineer": ["Python", "API Framework", "SQL", "NoSQL", "Cloud Platform"],
-            "backend": ["Python", "API Framework", "SQL", "NoSQL", "Cloud Platform"],
-            "devops engineer": ["Container", "Cloud Platform", "Linux", "CI/CD", "Infrastructure as Code"],
-            "devops": ["Container", "Cloud Platform", "Linux", "CI/CD", "Infrastructure as Code"],
-            "frontend engineer": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
-            "frontend": ["JavaScript", "Frontend Framework", "CSS", "HTML", "TypeScript"],
-            "mern stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
-            "mern": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
-            "mean stack developer": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
-            "mean": ["JavaScript", "Frontend Framework", "API Framework", "NoSQL", "Node.js"],
-            "cloud architect": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
-            "cloud": ["Cloud Platform", "Container", "Infrastructure as Code", "Database Design", "Security"],
-        }
-        
-        goal_lower = career_goal.lower()
-        needed_skills = career_skill_map.get(goal_lower, ["Python", "JavaScript", "SQL"])
-        
+        goal_key = self._normalize_goal(career_goal)
+        needed_skills = self.career_skill_map.get(goal_key)
+        if needed_skills is None:
+            remote_skills = self.role_skill_api.get_role_skills(goal_key)
+            if remote_skills:
+                needed_skills = remote_skills
+            else:
+                needed_skills = self._infer_skills_from_goal(goal_key)
+
         # Normalize current skills to their canonical forms
         normalized_current = set()
         for skill in current_skills:
@@ -148,33 +247,68 @@ class CareerAnalyzer:
     def map_career_trajectory(self, goal: str) -> Dict:
         """Map the career trajectory for the goal"""
         
-        trajectories = {
-            "machine learning engineer": ["Python Basics", "ML Fundamentals", "Deep Learning", "Advanced NLP", "ML Systems Design"],
-            "machine learning": ["Python Basics", "ML Fundamentals", "Deep Learning", "Advanced NLP", "ML Systems Design"],
-            "ml engineer": ["Python Basics", "ML Fundamentals", "Deep Learning", "Advanced NLP", "ML Systems Design"],
-            "ml engineering": ["Python Basics", "ML Fundamentals", "Deep Learning", "Advanced NLP", "ML Systems Design"],
-            "full stack developer": ["Frontend Basics", "Backend Fundamentals", "Database Design", "DevOps", "System Design"],
-            "fullstack": ["Frontend Basics", "Backend Fundamentals", "Database Design", "DevOps", "System Design"],
-            "data scientist": ["Python & SQL", "Statistics", "Data Visualization", "Machine Learning", "Big Data Tools"],
-            "data science": ["Python & SQL", "Statistics", "Data Visualization", "Machine Learning", "Big Data Tools"],
-            "backend engineer": ["Python Web Dev", "Database Design", "Microservices", "System Design", "Cloud Deployment"],
-            "backend": ["Python Web Dev", "Database Design", "Microservices", "System Design", "Cloud Deployment"],
-            "frontend engineer": ["HTML/CSS Basics", "JavaScript Fundamentals", "React/Framework", "State Management", "Advanced UI/UX"],
-            "frontend": ["HTML/CSS Basics", "JavaScript Fundamentals", "React/Framework", "State Management", "Advanced UI/UX"],
-            "devops engineer": ["Linux Basics", "Docker/Containers", "Kubernetes", "CI/CD Pipelines", "Infrastructure as Code"],
-            "devops": ["Linux Basics", "Docker/Containers", "Kubernetes", "CI/CD Pipelines", "Infrastructure as Code"],
-            "cloud architect": ["Cloud Fundamentals", "AWS/Azure Services", "Architecture Patterns", "Security", "Cost Optimization"],
-            "cloud": ["Cloud Fundamentals", "AWS/Azure Services", "Architecture Patterns", "Security", "Cost Optimization"],
-        }
-        
-        goal_lower = goal.lower()
-        steps = trajectories.get(goal_lower, ["Foundation", "Intermediate", "Advanced", "Expert"])
+        goal_key = self._normalize_goal(goal)
+        steps = self.career_trajectory_map.get(goal_key)
+        if steps is None:
+            steps = self._infer_trajectory_from_goal(goal_key)
         
         return {
             "career_goal": goal,
             "trajectory_steps": steps,
             "total_steps": len(steps)
         }
+
+    def _normalize_goal(self, goal: str) -> str:
+        """Normalize career goal text to a consistent key"""
+        return goal.strip().lower()
+
+    def _infer_skills_from_goal(self, goal_key: str) -> List[str]:
+        """Infer a conservative role-specific skill set from the career goal"""
+        for mapped_goal in self.career_skill_map:
+            if mapped_goal in goal_key:
+                return self.career_skill_map[mapped_goal]
+        
+        # Use keyword heuristics for non-IT roles and avoid generic IT defaults
+        if any(keyword in goal_key for keyword in ["manager", "director", "lead"]):
+            return ["Leadership", "Communication", "Planning", "Stakeholder Management", "Decision Making"]
+        if any(keyword in goal_key for keyword in ["analyst", "analytics", "analysis"]):
+            return ["Data Analysis", "Reporting", "Communication", "Problem Solving", "Domain Knowledge"]
+        if any(keyword in goal_key for keyword in ["designer", "design", "ux", "ui"]):
+            return ["Visual Design", "User Research", "Prototyping", "Typography", "Communication"]
+        if any(keyword in goal_key for keyword in ["sales", "customer", "service"]):
+            return ["Customer Relationship Management", "Communication", "Negotiation", "Problem Solving", "Product Knowledge"]
+        if any(keyword in goal_key for keyword in ["teacher", "trainer", "educator"]):
+            return ["Lesson Planning", "Instructional Delivery", "Classroom Management", "Assessment", "Communication"]
+        if any(keyword in goal_key for keyword in ["accountant", "finance", "financial", "auditor"]):
+            return ["Financial Reporting", "Compliance", "Excel", "Attention to Detail", "Analytical Thinking"]
+        if any(keyword in goal_key for keyword in ["nurse", "clinical", "caregiver"]):
+            return ["Patient Care", "Clinical Procedures", "Medical Documentation", "Safety", "Team Collaboration"]
+        if any(keyword in goal_key for keyword in ["operations", "logistics", "supply chain"]):
+            return ["Process Improvement", "Resource Management", "KPI Tracking", "Communication", "Decision Making"]
+        if any(keyword in goal_key for keyword in ["mechanical", "hvac", "manufacturing", "product development"]):
+            return ["Technical Design", "Field-Specific Engineering", "Problem Solving", "Documentation", "Standards Compliance"]
+        if any(keyword in goal_key for keyword in ["fire", "firefighter", "fire investigator", "fire safety"]):
+            return ["Fire Safety", "Risk Assessment", "Code Compliance", "Emergency Response", "Investigation" ]
+        if any(keyword in goal_key for keyword in ["chef", "cook", "culinary", "kitchen"]):
+            return ["Culinary Skills", "Menu Planning", "Food Safety", "Kitchen Operations", "Customer Service"]
+        if any(keyword in goal_key for keyword in ["automotive", "vehicle", "car"]):
+            return ["Vehicle Systems", "Diagnostics", "CAD", "Materials Engineering", "Testing"]
+        if any(keyword in goal_key for keyword in ["sweeper", "janitor", "cleaner", "custodian"]):
+            return ["Cleaning Procedures", "Equipment Operation", "Safety", "Scheduling", "Waste Disposal"]
+        if any(keyword in goal_key for keyword in ["teacher", "trainer", "educator"]):
+            return ["Lesson Planning", "Instructional Delivery", "Classroom Management", "Assessment", "Communication"]
+        if "engineer" in goal_key:
+            return ["Technical Design", "Problem Solving", "Documentation", "Project Planning", "Standards Compliance"]
+        
+        return ["Role-specific knowledge", "Communication", "Problem Solving", "Professionalism"]
+
+    def _infer_trajectory_from_goal(self, goal_key: str) -> List[str]:
+        """Infer a more generic trajectory when the exact role isn't mapped"""
+        for mapped_goal in self.career_trajectory_map:
+            if mapped_goal in goal_key:
+                return self.career_trajectory_map[mapped_goal]
+        
+        return ["Foundation", "Intermediate", "Advanced", "Expert"]
 
 class RoadmapGenerator:
     """Generates personalized learning roadmaps"""

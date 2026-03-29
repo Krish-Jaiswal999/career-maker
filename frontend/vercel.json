@@ -1,6 +1,12 @@
 {
   "version": 3,
   "name": "career-path-planner-frontend",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://your-render-backend.onrender.com/api/$1"
+    }
+  ],
   "routes": [
     { "src": "/(.*)", "dest": "/$1" }
   ]

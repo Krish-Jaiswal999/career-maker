@@ -3,7 +3,7 @@
  * Handles all communication with backend
  */
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '/api';
 
 class APIClient {
     constructor() {
@@ -21,6 +21,8 @@ class APIClient {
         const url = `${API_BASE_URL}${endpoint}`;
         const options = {
             method,
+            mode: 'cors',
+            cache: 'no-cache',
             headers: this.getHeaders()
         };
 
@@ -60,8 +62,8 @@ class APIClient {
 
             return responseData;
         } catch (error) {
-            console.error('API Error:', error);
-            throw error;
+            console.error('API Error:', error, 'url=', url, 'options=', options);
+            throw new Error(`Failed to reach API at ${url}: ${error.message}`);
         }
     }
 

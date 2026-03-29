@@ -11,6 +11,12 @@ services:
     workingDirectory: backend
     envVars:
       - key: DATABASE_URL
-        value: "sqlite:///./data.db"
+        value: "postgresql://career_user:YOUR_SECURE_PASSWORD@postgres:5432/career_maker_db"
+      - key: REDIS_URL
+        value: "redis://:YOUR_REDIS_PASSWORD@redis:6379"
       - key: SECRET_KEY
         value: "replace-with-production-secret"
+      - key: ENVIRONMENT
+        value: "production"
+      - key: ALLOWED_ORIGINS
+        value: "[\"https://your-vercel-domain.vercel.app\"]"
