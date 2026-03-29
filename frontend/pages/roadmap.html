@@ -10,7 +10,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-brand" onclick="window.location.href='..'" style="cursor: pointer;">🚀 GenAI Career Planner</div>
             <div class="nav-menu">
                 <a href="dashboard.html" class="nav-link">Dashboard</a>
                 <a href="roadmap.html" class="nav-link active">Roadmap</a>
@@ -29,6 +29,24 @@
             <h2>📊 Your Progress</h2>
             <div id="progress-container"></div>
         </section>
+
+        <!-- Skills Tracker -->
+        <section class="card">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <h2>🎓 Skills to Learn</h2>
+                    <div id="skills-to-learn-container" style="margin-top: 1rem;"></div>
+                </div>
+                <div>
+                    <h2>✅ Skills Learned</h2>
+                    <div style="margin-top: 1rem;">
+                        <input type="text" id="skill-input" placeholder="Enter a skill you've learned" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;">
+                        <button type="button" onclick="addSkillLearned()" class="btn btn-primary" style="width: 100%;">Add Skill</button>
+                    </div>
+                    <div id="skills-learned-container" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+        </section>
         
         <div id="roadmap-timeline" class="timeline">
             <!-- Phases will be inserted here -->
@@ -42,11 +60,6 @@
         <section class="card">
             <h2>Recommended Projects</h2>
             <div id="projects-container" class="projects-grid"></div>
-        </section>
-
-        <section class="card">
-            <h2>Learning Resources</h2>
-            <div id="resources-container"></div>
         </section>
 
         <button type="button" onclick="generatePortfolio()" class="btn btn-primary">Generate Portfolio</button>

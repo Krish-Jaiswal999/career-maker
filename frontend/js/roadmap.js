@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     checkAuth();
     await loadRoadmap();
     loadProjects();
-    loadResources();
     loadProgressOverview();
+    displaySkillsLearned();
+    displaySkillsToLearn();
 });
 
 let currentRoadmap = null;  // Store roadmap for progress extraction
@@ -212,16 +213,31 @@ async function loadProgressOverview() {
             ? roadmapSkills.map(s => ({skill: s}))
             : learningPath.skills_to_learn;
         
-        const skillsCount = learningPath.learned_skills_count !== undefined ? learningPath.learned_skills_count : Math.round(learningPath.progress_percentage / 100 * learningPath.total_skills_needed);
-        const totalSkills = learningPath.total_skills_needed;
-        const progressPercent = Math.round(learningPath.progress_percentage);
+        // Calculate progress based on skills learned from localStorage
+        const skillsLearned = JSON.parse(localStorage.getItem('skillsLearned')) || [];
+        let matchedSkillsCount = 0;
+        
+        // Count how many skills from roadmap are in the learned list
+        const uniqueSkills = [...new Set(skillsToLearn.map(item => item.skill))];
+        uniqueSkills.forEach(roadmapSkill => {
+            if (skillsLearned.some(learned => learned.toLowerCase() === roadmapSkill.toLowerCase())) {
+                matchedSkillsCount++;
+            }
+        });
+        
+        // Calculate progress percentage based on learned skills
+        const totalSkillsInRoadmap = uniqueSkills.length;
+        let progressPercent = 0;
+        if (totalSkillsInRoadmap > 0) {
+            progressPercent = Math.round((matchedSkillsCount / totalSkillsInRoadmap) * 100);
+        }
         
         let html = `
             <p><strong>Career Goal:</strong> ${learningPath.career_goal}</p>
             <div class="progress-bar">
                 <div class="progress-fill" style="width: ${progressPercent}%"></div>
             </div>
-            <p><strong>${skillsCount} of ${totalSkills} skills completed (${progressPercent}%)</strong></p>
+            <p><strong>${matchedSkillsCount} of ${totalSkillsInRoadmap} skills completed (${progressPercent}%)</strong></p>
             
             <div class="progress-section">
                 <h3>📚 Skills to Learn (from Roadmap)</h3>
@@ -230,9 +246,14 @@ async function loadProgressOverview() {
         if (skillsToLearn.length > 0) {
             html += '<div class="skills-to-learn">';
             // Remove duplicates
-            const uniqueSkills = [...new Set(skillsToLearn.map(item => item.skill))];
-            uniqueSkills.forEach(skill => {
-                html += `<span class="skill-badge-todo">${skill}</span>`;
+            const uniqueSkillsList = [...new Set(skillsToLearn.map(item => item.skill))];
+            uniqueSkillsList.forEach(skill => {
+                const isLearned = skillsLearned.some(learned => learned.toLowerCase() === skill.toLowerCase());
+                if (isLearned) {
+                    html += `<span class="skill-badge" style="background: #d4edda; color: #155724;">✅ ${skill}</span>`;
+                } else {
+                    html += `<span class="skill-badge-todo">${skill}</span>`;
+                }
             });
             html += '</div>';
         } else {
@@ -266,4 +287,120 @@ function startProject(title) {
 
 function generatePortfolio() {
     window.location.href = 'portfolio.html';
+}
+
+// Skill Learned Tracker
+let skilsLearned = JSON.parse(localStorage.getItem('skillsLearned')) || [];
+
+function addSkillLearned() {
+    const input = document.getElementById('skill-input');
+    const skill = input.value.trim();
+    
+    if (!skill) {
+        alert('Please enter a skill name');
+        return;
+    }
+    
+    // Check if skill matches any in skills to learn
+    const skillsToLearn = [];
+    if (currentRoadmap && currentRoadmap.phases) {
+        currentRoadmap.phases.forEach(phase => {
+            if (phase.skills && Array.isArray(phase.skills)) {
+                skillsToLearn.push(...phase.skills);
+            }
+        });
+    }
+    
+    const skillMatches = skillsToLearn.some(s => s.toLowerCase() === skill.toLowerCase());
+    
+    if (!skilsLearned.includes(skill)) {
+        skilsLearned.push(skill);
+        localStorage.setItem('skillsLearned', JSON.stringify(skilsLearned));
+        
+        // Show feedback
+        if (skillMatches) {
+            alert(`✅ Great! "${skill}" is in your roadmap and has been marked as learned!`);
+        } else {
+            alert(`Added "${skill}" to your learned skills.`);
+        }
+        
+        // Update progress bar
+        updateProgressOverview();
+        displaySkillsLearned();
+    } else {
+        alert(`"${skill}" is already in your learned skills list`);
+    }
+    
+    input.value = '';
+}
+
+function displaySkillsLearned() {
+    const container = document.getElementById('skills-learned-container');
+    if (!container) return;
+    
+    if (skilsLearned.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No skills learned yet. Start adding them!</p>';
+        return;
+    }
+    
+    let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+    skilsLearned.forEach(skill => {
+        html += `
+            <div style="background: #d4edda; padding: 8px 12px; border-radius: 5px; display: flex; align-items: center; gap: 8px;">
+                <span>✅ ${skill}</span>
+                <button onclick="removeSkillLearned('${skill}')" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 1.2rem;">×</button>
+            </div>
+        `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function removeSkillLearned(skill) {
+    skilsLearned = skilsLearned.filter(s => s !== skill);
+    localStorage.setItem('skillsLearned', JSON.stringify(skilsLearned));
+    displaySkillsLearned();
+    updateProgressOverview();
+}
+
+function displaySkillsToLearn() {
+    const container = document.getElementById('skills-to-learn-container');
+    if (!container) return;
+    
+    const skillsToLearn = [];
+    if (currentRoadmap && currentRoadmap.phases) {
+        currentRoadmap.phases.forEach(phase => {
+            if (phase.skills && Array.isArray(phase.skills)) {
+                phase.skills.forEach(skill => {
+                    if (!skillsToLearn.includes(skill)) {
+                        skillsToLearn.push(skill);
+                    }
+                });
+            }
+        });
+    }
+    
+    if (skillsToLearn.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No skills to learn defined in roadmap.</p>';
+        return;
+    }
+    
+    let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
+    skillsToLearn.forEach(skill => {
+        const isLearned = skilsLearned.some(s => s.toLowerCase() === skill.toLowerCase());
+        if (isLearned) {
+            html += `<span class="skill-badge" style="background: #d4edda; color: #155724; text-decoration: line-through;">✅ ${skill}</span>`;
+        } else {
+            html += `<span class="skill-badge">${skill}</span>`;
+        }
+    });
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+// Update initialization to display skills learned
+function updateProgressOverview() {
+    displaySkillsLearned();
+    displaySkillsToLearn();
+    loadProgressOverview(); // Recalculate progress
 }

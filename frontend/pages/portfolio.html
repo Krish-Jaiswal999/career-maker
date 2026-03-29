@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <div class="nav-brand">GenAI Career Planner</div>
+            <div class="nav-brand" onclick="window.location.href='..'" style="cursor: pointer;">🚀 GenAI Career Planner</div>
             <div class="nav-menu">
                 <a href="dashboard.html" class="nav-link">Dashboard</a>
                 <a href="roadmap.html" class="nav-link">Roadmap</a>
@@ -20,7 +20,10 @@
     </nav>
 
     <div class="container main-container">
-        <h1>📄 Portfolio Builder</h1>
+        <div style="text-align: center;">
+            <h1>📄 Portfolio Builder</h1>
+            <p>Create a professional portfolio showcasing your skills and experience across any field of work.</p>
+        </div>
         
         <section class="card">
             <h2>Getting Started</h2>
@@ -34,21 +37,21 @@
         <section class="card" id="template-section" style="display: none;">
             <h2>Choose Portfolio Template</h2>
             <div class="template-grid">
-                <div class="template-card" onclick="selectTemplate('faang')">
+                <div class="template-card" onclick="selectTemplate('faang')" style="cursor: pointer; transition: all 0.3s ease; padding: 20px; border: 2px solid transparent; border-radius: 8px;">
                     <h3>🏢 FAANG Style</h3>
-                    <p>Professional tech company style</p>
+                    <p>Clean and professional for any industry</p>
                 </div>
-                <div class="template-card" onclick="selectTemplate('startup')">
+                <div class="template-card" onclick="selectTemplate('startup')" style="cursor: pointer; transition: all 0.3s ease; padding: 20px; border: 2px solid transparent; border-radius: 8px;">
                     <h3>🚀 Startup</h3>
-                    <p>Modern, colorful startup style</p>
+                    <p>Modern and creative for any field</p>
                 </div>
-                <div class="template-card" onclick="selectTemplate('researcher')">
+                <div class="template-card" onclick="selectTemplate('researcher')" style="cursor: pointer; transition: all 0.3s ease; padding: 20px; border: 2px solid transparent; border-radius: 8px;">
                     <h3>🔬 Researcher</h3>
-                    <p>Academic/research focused</p>
+                    <p>Academic and professional focused</p>
                 </div>
-                <div class="template-card" onclick="selectTemplate('minimal')">
+                <div class="template-card" onclick="selectTemplate('minimal')" style="cursor: pointer; transition: all 0.3s ease; padding: 20px; border: 2px solid transparent; border-radius: 8px;">
                     <h3>✨ Minimal</h3>
-                    <p>Clean and minimal design</p>
+                    <p>Elegant and timeless design</p>
                 </div>
             </div>
         </section>

@@ -32,6 +32,25 @@ function editInfo() {
 
 function selectTemplate(template) {
     selectedTemplate = template;
+    
+    // Highlight selected template
+    const cards = document.querySelectorAll('.template-card');
+    cards.forEach(card => {
+        card.style.border = '2px solid transparent';
+        card.style.backgroundColor = '#f9f9f9';
+    });
+    
+    // Find and highlight the selected card
+    const event = new Event('click');
+    const selectedCard = Array.from(cards).find(card => 
+        card.textContent.toLowerCase().includes(template)
+    );
+    if (selectedCard) {
+        selectedCard.style.border = '3px solid #667eea';
+        selectedCard.style.backgroundColor = '#f0f4ff';
+        selectedCard.style.boxShadow = '0 0 10px rgba(102, 126, 234, 0.3)';
+    }
+    
     generatePreview();
 }
 
@@ -68,14 +87,15 @@ function publishPortfolio() {
 }
 
 function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '../index.html';
+    }
 }
 
 function checkAuth() {
     if (!localStorage.getItem('token')) {
         window.location.href = 'login.html';
     }
-
 }

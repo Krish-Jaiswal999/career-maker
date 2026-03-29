@@ -57,7 +57,7 @@ class PortfolioGenerator:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }} - Software Engineer</title>
+    <title>{{ name }} - {{ current_title or 'Professional Portfolio' }}</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; line-height: 1.6; color: #333; }
@@ -81,17 +81,17 @@ class PortfolioGenerator:
             <h1>{{ name }}</h1>
             <p>{{ bio }}</p>
             <div class="contact">
-                <span>📧 {{ email }}</span>
+                <span>📧 <a href="mailto:{{ email }}">{{ email }}</a></span>
                 <span>📱 {{ phone }}</span>
                 <span>📍 {{ location }}</span>
-                <span><a href="{{ github_url }}">GitHub</a></span>
-                <span><a href="{{ linkedin_url }}">LinkedIn</a></span>
+                {% if github_url %}<span><a href="{{ github_url }}">GitHub</a></span>{% endif %}
+                {% if linkedin_url %}<span><a href="{{ linkedin_url }}">LinkedIn</a></span>{% endif %}
             </div>
         </header>
         
         {% if skills %}
         <section class="section">
-            <h2>Technical Skills</h2>
+            <h2>Skills</h2>
             <div>
                 {% for skill in skills %}
                 <span class="skill-tag">{{ skill }}</span>
@@ -163,7 +163,6 @@ class PortfolioGenerator:
         body{font-family:Inter,system-ui,Arial,sans-serif;background:linear-gradient(120deg,#0f172a 0%, #08112a 60%);color:#eef2ff}
         .frame{max-width:1100px;margin:40px auto;padding:28px}
         header{display:flex;align-items:center;gap:24px}
-        .avatar{width:96px;height:96px;background:rgba(255,255,255,0.06);border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:700}
         h1{font-size:2.1rem;margin:0}
         .meta{color:rgba(255,255,255,0.8)}
         .grid{display:grid;grid-template-columns:1fr 380px;gap:26px;margin-top:28px}
@@ -173,12 +172,13 @@ class PortfolioGenerator:
         .projects .proj{padding:14px;border-radius:10px;background:rgba(0,0,0,0.18);margin-bottom:12px}
         a.button{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none}
         .sidebar .contact a{color:#fff}
+        a {color: #fff; text-decoration: none;}
+        a:hover {text-decoration: underline;}
     </style>
 </head>
 <body>
     <div class="frame">
         <header>
-            <div class="avatar">{{ name.split(' ')[0][0] if name else 'U' }}</div>
             <div>
                 <h1>{{ name }}</h1>
                 <div class="meta">{{ bio }}</div>
@@ -210,8 +210,8 @@ class PortfolioGenerator:
                     <h3>Contact</h3>
                     <div><a href="mailto:{{ email }}">{{ email }}</a></div>
                     <div>{{ phone }}</div>
-                    <div><a href="{{ linkedin_url }}">LinkedIn</a></div>
-                    <div><a href="{{ github_url }}">GitHub</a></div>
+                    {% if linkedin_url and linkedin_url != '#' %}<div><a href="{{ linkedin_url }}">LinkedIn</a></div>{% endif %}
+                    {% if github_url and github_url != '#' %}<div><a href="{{ github_url }}">GitHub</a></div>{% endif %}
                 </div>
 
                 <div class="card" style="margin-top:16px">
@@ -283,7 +283,8 @@ class PortfolioGenerator:
             <h3>Contact & Links</h3>
             <div><a href="mailto:{{ email }}">{{ email }}</a></div>
             <div>{{ phone }}</div>
-            <div><a href="{{ linkedin_url }}">LinkedIn</a></div>
+            {% if linkedin_url and linkedin_url != '#' %}<div><a href="{{ linkedin_url }}">LinkedIn</a></div>{% endif %}
+            {% if github_url and github_url != '#' %}<div><a href="{{ github_url }}">GitHub</a></div>{% endif %}
             <div style="margin-top:12px"><strong>Skills</strong>
                 <div style="margin-top:8px">{% for skill in skills %}<div style="font-size:0.92rem">• {{ skill }}</div>{% endfor %}</div>
             </div>
@@ -319,6 +320,8 @@ class PortfolioGenerator:
             <div class="small">{{ current_title or '' }}<br>{{ current_company or '' }}</div>
             <hr style="margin:12px 0">
             <div class="small">Contact:<br><a href="mailto:{{ email }}">{{ email }}</a><br>{{ phone }}</div>
+            {% if linkedin_url and linkedin_url != '#' %}<div class="small" style="margin-top:8px"><a href="{{ linkedin_url }}">LinkedIn</a></div>{% endif %}
+            {% if github_url and github_url != '#' %}<div class="small"><a href="{{ github_url }}">GitHub</a></div>{% endif %}
             <h3 style="margin-top:18px">Skills</h3>
             <ul>{% for s in skills %}<li>{{ s }}</li>{% endfor %}</ul>
         </div>
