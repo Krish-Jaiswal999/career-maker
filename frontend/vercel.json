@@ -3,12 +3,11 @@
   "name": "career-path-planner-frontend",
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "https://your-render-backend.onrender.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/api/(.*)",
+      "destination": "https://your-render-backend.onrender.com/api/$1"
     }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
