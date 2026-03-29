@@ -174,9 +174,11 @@ const API = new APIClient();
 
 // Utility function for logout
 function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = 'login.html';
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '../index.html';
+    }
 }
 
 // Check if user is authenticated
