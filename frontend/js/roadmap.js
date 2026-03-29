@@ -198,39 +198,13 @@ async function loadProgressOverview() {
     try {
         const learningPath = await API.getLearningPath();
         
-        // Extract skills from roadmap phases if available
-        let roadmapSkills = [];
-        if (currentRoadmap && currentRoadmap.phases) {
-            currentRoadmap.phases.forEach(phase => {
-                if (phase.skills && Array.isArray(phase.skills)) {
-                    roadmapSkills.push(...phase.skills);
-                }
-            });
-        }
-        
-        // Use roadmap skills if available, otherwise use learning path
-        const skillsToLearn = roadmapSkills.length > 0 
-            ? roadmapSkills.map(s => ({skill: s}))
-            : learningPath.skills_to_learn;
-        
-        // Calculate progress based on skills learned from localStorage
+        // Use backend learning path progress so it matches dashboard progress
+        const currentSkills = learningPath.current_skills || [];
+        const skillsToLearn = learningPath.skills_to_learn || [];
+        const totalSkillsInRoadmap = learningPath.total_skills_needed || (currentSkills.length + skillsToLearn.length);
+        const progressPercent = Math.round(learningPath.progress_percentage || 0);
+        const matchedSkillsCount = totalSkillsInRoadmap - skillsToLearn.length;
         const skillsLearned = JSON.parse(localStorage.getItem('skillsLearned')) || [];
-        let matchedSkillsCount = 0;
-        
-        // Count how many skills from roadmap are in the learned list
-        const uniqueSkills = [...new Set(skillsToLearn.map(item => item.skill))];
-        uniqueSkills.forEach(roadmapSkill => {
-            if (skillsLearned.some(learned => learned.toLowerCase() === roadmapSkill.toLowerCase())) {
-                matchedSkillsCount++;
-            }
-        });
-        
-        // Calculate progress percentage based on learned skills
-        const totalSkillsInRoadmap = uniqueSkills.length;
-        let progressPercent = 0;
-        if (totalSkillsInRoadmap > 0) {
-            progressPercent = Math.round((matchedSkillsCount / totalSkillsInRoadmap) * 100);
-        }
         
         let html = `
             <p><strong>Career Goal:</strong> ${learningPath.career_goal}</p>
@@ -290,7 +264,7 @@ function generatePortfolio() {
 }
 
 // Skill Learned Tracker
-let skilsLearned = JSON.parse(localStorage.getItem('skillsLearned')) || [];
+let skillsLearned = JSON.parse(localStorage.getItem('skillsLearned')) || [];
 
 function addSkillLearned() {
     const input = document.getElementById('skill-input');
@@ -313,9 +287,9 @@ function addSkillLearned() {
     
     const skillMatches = skillsToLearn.some(s => s.toLowerCase() === skill.toLowerCase());
     
-    if (!skilsLearned.includes(skill)) {
-        skilsLearned.push(skill);
-        localStorage.setItem('skillsLearned', JSON.stringify(skilsLearned));
+    if (!skillsLearned.includes(skill)) {
+        skillsLearned.push(skill);
+        localStorage.setItem('skillsLearned', JSON.stringify(skillsLearned));
         
         // Show feedback
         if (skillMatches) {
@@ -338,13 +312,13 @@ function displaySkillsLearned() {
     const container = document.getElementById('skills-learned-container');
     if (!container) return;
     
-    if (skilsLearned.length === 0) {
+    if (skillsLearned.length === 0) {
         container.innerHTML = '<p style="color: #666;">No skills learned yet. Start adding them!</p>';
         return;
     }
     
     let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
-    skilsLearned.forEach(skill => {
+    skillsLearned.forEach(skill => {
         html += `
             <div style="background: #d4edda; padding: 8px 12px; border-radius: 5px; display: flex; align-items: center; gap: 8px;">
                 <span>✅ ${skill}</span>
@@ -357,8 +331,8 @@ function displaySkillsLearned() {
 }
 
 function removeSkillLearned(skill) {
-    skilsLearned = skilsLearned.filter(s => s !== skill);
-    localStorage.setItem('skillsLearned', JSON.stringify(skilsLearned));
+    skillsLearned = skillsLearned.filter(s => s !== skill);
+    localStorage.setItem('skillsLearned', JSON.stringify(skillsLearned));
     displaySkillsLearned();
     updateProgressOverview();
 }
@@ -387,7 +361,7 @@ function displaySkillsToLearn() {
     
     let html = '<div style="display: flex; flex-wrap: wrap; gap: 10px;">';
     skillsToLearn.forEach(skill => {
-        const isLearned = skilsLearned.some(s => s.toLowerCase() === skill.toLowerCase());
+        const isLearned = skillsLearned.some(s => s.toLowerCase() === skill.toLowerCase());
         if (isLearned) {
             html += `<span class="skill-badge" style="background: #d4edda; color: #155724; text-decoration: line-through;">✅ ${skill}</span>`;
         } else {
