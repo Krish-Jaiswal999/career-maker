@@ -14,6 +14,7 @@ class EmailService:
     def __init__(self):
         self.smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
         self.smtp_port = int(os.getenv("SMTP_PORT", "587"))
+        self.smtp_timeout = int(os.getenv("SMTP_TIMEOUT", "10"))
         self.sender_email = os.getenv("SENDER_EMAIL", "")
         self.sender_password = os.getenv("SENDER_PASSWORD", "")
         self.environment = os.getenv("ENVIRONMENT", "development").lower()
@@ -92,9 +93,11 @@ Career Path Planner Team
             message.attach(part1)
             message.attach(part2)
             
-            # Send email
-            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+            # Send email with a timeout so the request cannot hang indefinitely
+            with smtplib.SMTP(self.smtp_server, self.smtp_port, timeout=self.smtp_timeout) as server:
+                server.ehlo()
                 server.starttls()
+                server.ehlo()
                 server.login(self.sender_email, self.sender_password)
                 server.sendmail(self.sender_email, recipient_email, message.as_string())
             
@@ -158,8 +161,10 @@ Career Path Planner Team
             message.attach(part1)
             message.attach(part2)
             
-            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
+            with smtplib.SMTP(self.smtp_server, self.smtp_port, timeout=self.smtp_timeout) as server:
+                server.ehlo()
                 server.starttls()
+                server.ehlo()
                 server.login(self.sender_email, self.sender_password)
                 server.sendmail(self.sender_email, recipient_email, message.as_string())
             
