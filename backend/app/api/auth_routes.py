@@ -166,7 +166,10 @@ def forgot_password(email: str, db: Session = Depends(get_db)):
     # Send OTP email
     from app.email_service import EmailService
     email_service = EmailService()
-    email_service.send_otp_email(user.email, otp, user.full_name)
+    email_sent = email_service.send_otp_email(user.email, otp, user.full_name)
+    if not email_sent:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to send OTP email. Check SMTP settings.")
     
     return {"message": "If email exists, OTP has been sent"}
 

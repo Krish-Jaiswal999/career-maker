@@ -16,6 +16,7 @@ class EmailService:
         self.smtp_port = int(os.getenv("SMTP_PORT", "587"))
         self.sender_email = os.getenv("SENDER_EMAIL", "")
         self.sender_password = os.getenv("SENDER_PASSWORD", "")
+        self.environment = os.getenv("ENVIRONMENT", "development").lower()
     
     def send_otp_email(self, recipient_email: str, otp: str, full_name: str = "User") -> bool:
         """
@@ -30,8 +31,11 @@ class EmailService:
             True if sent successfully, False otherwise
         """
         try:
-            # If no SMTP credentials, skip email (development mode)
+            # If no SMTP credentials, handle based on environment
             if not self.sender_email or not self.sender_password:
+                if self.environment == "production":
+                    print(f"[ERROR] Missing SMTP credentials in production for {recipient_email}")
+                    return False
                 print(f"[DEV MODE] OTP for {recipient_email}: {otp}")
                 return True
             
