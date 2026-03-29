@@ -38,7 +38,7 @@ Vector DB (FAISS/Redis)
 | **Backend** | Python, FastAPI |
 | **Database** | PostgreSQL (primary), Redis (cache) |
 | **Vector DB** | FAISS (embeddings) |
-| **AI/ML** | OpenAI API, LangChain, Sentence Transformers |
+| **AI/ML** | RoleSkill API, Sentence Transformers |
 | **Scraping** | Selenium, BeautifulSoup |
 | **Authentication** | JWT, OAuth2 |
 | **Deployment** | Docker, Gunicorn |
@@ -174,9 +174,10 @@ SECRET_KEY=your-super-secret-key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 
-# AI/LLM (Optional)
-OPENAI_API_KEY=sk-your-key
-LANGCHAIN_API_KEY=your-key
+# Live role skill API
+ROLE_SKILL_API_URL=https://api.deepseek.com
+ROLE_SKILL_API_TOKEN=your-api-token-here
+ROLE_SKILL_API_CACHE_TTL_SECONDS=3600
 
 # LinkedIn (for scraping - use with caution)
 LINKEDIN_EMAIL=your-email@example.com
@@ -282,7 +283,7 @@ git push heroku main
 ## 📈 Roadmap / Future Features
 
 - [ ] Real LinkedIn scraping with proper legal setup
-- [ ] OpenAI integration for better AI responses
+- [ ] Optional OpenAI integration for expanded AI responses
 - [ ] Coding challenge generator
 - [ ] ATS resume analyzer
 - [ ] Interview prep module

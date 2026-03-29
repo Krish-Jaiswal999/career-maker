@@ -247,7 +247,7 @@ Once backend is running:
 
 ## 🚀 Next Steps
 
-1. **Customize .env** - Set up OpenAI API key for AI features
+1. **Customize .env** - Set up backend env values, including ROLE_SKILL_API_TOKEN
 2. **Add Real Data** - LinkedIn profile analysis requires setup
 3. **Configure Redis** - For caching and sessions
 4. **UI Customization** - Modify CSS files

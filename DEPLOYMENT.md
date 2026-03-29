@@ -37,7 +37,7 @@ This guide covers deploying the Career Maker application to a production environ
 - [ ] JWT SECRET_KEY generated (minimum 32 characters)
 - [ ] CORS origins updated for your domain
 - [ ] Email configuration set up (SMTP)
-- [ ] OpenAI API key (if needed)
+- [ ] ROLE_SKILL_API_TOKEN configured for skill lookup
 - [ ] SSL certificates ready (Let's Encrypt or purchased)
 - [ ] Firewall rules configured (80, 443 open)
 
@@ -73,7 +73,9 @@ REDIS_URL=redis://:YOUR_REDIS_PASSWORD@redis:6379
 SMTP_SERVER=smtp.gmail.com  # or your email provider
 SENDER_EMAIL=your-email@example.com
 SENDER_PASSWORD=your-app-password
-OPENAI_API_KEY=sk-your-key
+ROLE_SKILL_API_URL=https://api.deepseek.com
+ROLE_SKILL_API_TOKEN=your-api-token-here
+ROLE_SKILL_API_CACHE_TTL_SECONDS=3600
 ALLOWED_ORIGINS=["https://yourdomain.com", "https://www.yourdomain.com"]
 ENVIRONMENT=production
 DEBUG=False

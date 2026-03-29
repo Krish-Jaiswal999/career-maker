@@ -112,7 +112,7 @@ career-maker.2/
 - [x] Responsive UI
 
 ### Advanced Features (Ready to Add)
-- [ ] Real OpenAI integration
+- [ ] Real RoleSkill API expansion
 - [ ] Video tutorials integration
 - [ ] Coding challenge generator
 - [ ] Interview prep module
@@ -132,7 +132,7 @@ career-maker.2/
 | **Database** | PostgreSQL, Redis, FAISS |
 | **Authentication** | JWT, OAuth2, bcrypt |
 | **Deployment** | Docker, Docker Compose, Gunicorn |
-| **APIs** | OpenAI (optional), GitHub, YouTube |
+| **APIs** | RoleSkill API, GitHub, YouTube |
 
 ---
 

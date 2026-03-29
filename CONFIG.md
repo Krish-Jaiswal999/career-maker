@@ -26,14 +26,12 @@ ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-### AI/LLM Integration (Optional)
+### AI Integration
 ```env
-# OpenAI API key (for GPT-4 integration)
-OPENAI_API_KEY=sk-your-api-key-here
-
-# LangChain (optional)
-LANGCHAIN_API_KEY=your-api-key
-LANGCHAIN_PROJECT=your-project-name
+# Live role skill API
+ROLE_SKILL_API_URL=https://api.deepseek.com
+ROLE_SKILL_API_TOKEN=your-api-token-here
+ROLE_SKILL_API_CACHE_TTL_SECONDS=3600
 ```
 
 ### Web Scraping
@@ -188,10 +186,10 @@ redis-cli ping
 
 ## API Keys & Services
 
-### OpenAI (GPT-4)
-1. Go to https://platform.openai.com/api-keys
-2. Create new secret key
-3. Add to .env: `OPENAI_API_KEY=sk-...`
+### RoleSkill API
+1. Get your ROLE_SKILL_API_TOKEN from your skill provider
+2. Add to `.env`: `ROLE_SKILL_API_TOKEN=your-api-token-here`
+3. Set `ROLE_SKILL_API_URL` if not using the default endpoint
 
 ### GitHub
 1. Go to https://github.com/settings/tokens
@@ -252,7 +250,8 @@ POSTGRES_DB=career_maker_db
 DATABASE_URL=postgresql://career_user:career_password@postgres:5432/career_maker_db
 REDIS_URL=redis://redis:6379
 
-OPENAI_API_KEY=sk-your-key
+ROLE_SKILL_API_URL=https://api.deepseek.com
+ROLE_SKILL_API_TOKEN=your-api-token-here
 SECRET_KEY=docker-secret-key
 ```
 

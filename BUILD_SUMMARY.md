@@ -259,7 +259,7 @@ docker-compose up -d
    - Visit http://localhost:3000
 
 4. **Add API Keys** (Optional)
-   - OpenAI API key for chat features
+   - ROLE_SKILL_API_TOKEN for role/skill lookup
    - GitHub token for trending repos
    - YouTube API key for courses
 
