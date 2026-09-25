@@ -2,6 +2,7 @@
 Portfolio & Scraping API Routes
 """
 
+import html
 from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -354,20 +355,25 @@ async def generate_portfolio_html(
 
 def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=None):
     """Generate HTML from portfolio info"""
-    
+
+    def safe(value):
+        if value is None:
+            return ""
+        return html.escape(str(value), quote=True)
+
     # Build contact info
-    phone_html = f"<a href='tel:{portfolio_info.phone}'>{portfolio_info.phone}</a>" if portfolio_info.phone else ""
-    linkedin_html = f"<a href='{portfolio_info.linkedin_url}'>LinkedIn</a>" if portfolio_info.linkedin_url else ""
-    github_html = f"<a href='{portfolio_info.github_url}'>GitHub</a>" if portfolio_info.github_url else ""
-    email_html = f"<a href='mailto:{portfolio_info.email}'>{portfolio_info.email}</a>"
-    
+    phone_html = f"<a href='tel:{safe(portfolio_info.phone)}'>{safe(portfolio_info.phone)}</a>" if portfolio_info.phone else ""
+    linkedin_html = f"<a href='{safe(portfolio_info.linkedin_url)}'>LinkedIn</a>" if portfolio_info.linkedin_url else ""
+    github_html = f"<a href='{safe(portfolio_info.github_url)}'>GitHub</a>" if portfolio_info.github_url else ""
+    email_html = f"<a href='mailto:{safe(portfolio_info.email)}'>{safe(portfolio_info.email)}</a>"
+
     # Build sections
     summary_html = ""
     if portfolio_info.professional_summary:
         summary_html = f'''
         <section style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 40px;">
             <h2 style="font-size: 1.5em; color: #667eea; margin-bottom: 15px;">About</h2>
-            <p>{portfolio_info.professional_summary}</p>
+            <p>{safe(portfolio_info.professional_summary)}</p>
         </section>
         '''
     else:
@@ -387,7 +393,7 @@ def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=Non
         summary_html = f'''
         <section style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 40px;">
             <h2 style="font-size: 1.5em; color: #667eea; margin-bottom: 15px;">About</h2>
-            <p>{gen_summary}</p>
+            <p>{safe(gen_summary)}</p>
         </section>
         '''
     
@@ -429,10 +435,10 @@ def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=Non
             description = exp.get('description', '') if isinstance(exp, dict) else str(exp)
             exp_items += f'''
             <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ddd;">
-                <div style="font-weight: bold; font-size: 1.1em;">{title}</div>
-                <div style="color: #667eea; font-weight: 600;">{company}</div>
-                <div style="color: #666; font-style: italic;">{years}</div>
-                <p>{description}</p>
+                <div style="font-weight: bold; font-size: 1.1em;">{safe(title)}</div>
+                <div style="color: #667eea; font-weight: 600;">{safe(company)}</div>
+                <div style="color: #666; font-style: italic;">{safe(years)}</div>
+                <p>{safe(description)}</p>
             </div>
             '''
 
@@ -448,10 +454,10 @@ def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=Non
     <section style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 40px;">
         <h2 style="font-size: 1.5em; color: #667eea; margin-bottom: 15px;">Education</h2>
         <div style="margin-bottom: 20px;">
-            <div style="font-weight: bold; font-size: 1.1em;">{portfolio_info.highest_degree}</div>
-            <div style="color: #667eea; font-weight: 600;">{portfolio_info.university}</div>
-            <div style="color: #666;">Major: {portfolio_info.major}</div>
-            {f"<div style='color: #666;'>Graduation: {portfolio_info.graduation_year}</div>" if portfolio_info.graduation_year else ""}
+            <div style="font-weight: bold; font-size: 1.1em;">{safe(portfolio_info.highest_degree)}</div>
+            <div style="color: #667eea; font-weight: 600;">{safe(portfolio_info.university)}</div>
+            <div style="color: #666;">Major: {safe(portfolio_info.major)}</div>
+            {f"<div style='color: #666;'>Graduation: {safe(portfolio_info.graduation_year)}</div>" if portfolio_info.graduation_year else ""}
         </div>
     </section>
     '''
@@ -463,7 +469,7 @@ def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=Non
         profile = db.query(Profile).filter(Profile.user_id == user.id).first()
         if profile and profile.current_skills:
             skills = profile.current_skills if isinstance(profile.current_skills, list) else []
-            skills_items = "".join([f'<span style="background: #667eea; color: white; padding: 8px 15px; border-radius: 20px; margin: 5px; display: inline-block;">{skill}</span>' for skill in skills])
+            skills_items = "".join([f'<span style="background: #667eea; color: white; padding: 8px 15px; border-radius: 20px; margin: 5px; display: inline-block;">{safe(skill)}</span>' for skill in skills])
             skills_html = f'''
             <section style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 40px;">
                 <h2 style="font-size: 1.5em; color: #667eea; margin-bottom: 15px;">Skills</h2>
@@ -493,8 +499,8 @@ def _generate_portfolio_html(user, portfolio_info, template_type='faang', db=Non
             description = achievement.get('description', '') if isinstance(achievement, dict) else ''
             achievement_items += f'''
             <div style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #ddd;">
-                <div style="font-weight: bold; font-size: 1.1em;">{title}</div>
-                <p>{description}</p>
+                <div style="font-weight: bold; font-size: 1.1em;">{safe(title)}</div>
+                <p>{safe(description)}</p>
             </div>
             '''
         
