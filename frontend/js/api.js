@@ -3,7 +3,22 @@
  * Handles all communication with backend
  */
 
-const API_BASE_URL = '/api';
+const resolveApiBaseUrl = () => {
+    const configuredBase = (
+        (typeof window !== 'undefined' && window.API_BASE_URL) ||
+        (typeof window !== 'undefined' && window.__API_BASE_URL__) ||
+        'http://localhost:8000/api'
+    );
+
+    if (!configuredBase) {
+        return 'http://localhost:8000/api';
+    }
+
+    const normalized = configuredBase.trim().replace(/\/$/, '');
+    return normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 class APIClient {
     constructor() {
@@ -32,17 +47,28 @@ class APIClient {
 
         try {
             const response = await fetch(url, options);
-            const responseData = await response.json();
-            
+            const responseText = await response.text();
+            let responseData = {};
+
+            if (responseText) {
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (parseError) {
+                    throw new Error(
+                        `API returned HTML instead of JSON. Make sure the backend is running at http://localhost:8000. URL: ${url}`
+                    );
+                }
+            }
+
             if (!response.ok) {
                 if (response.status === 401) {
                     localStorage.removeItem('token');
                     window.location.href = 'login.html';
                 }
-                
+
                 // Format error message
                 let errorMessage = `API Error: ${response.status}`;
-                
+
                 if (Array.isArray(responseData.detail)) {
                     // Handle Pydantic validation errors (array of error objects)
                     const errors = responseData.detail.map(err => {
@@ -55,7 +81,7 @@ class APIClient {
                     // Handle simple error message
                     errorMessage += ' - ' + responseData.detail;
                 }
-                
+
                 console.error('API Error Details:', responseData);
                 throw new Error(errorMessage);
             }

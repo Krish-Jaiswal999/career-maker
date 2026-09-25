@@ -27,7 +27,10 @@
             <p>Don't have an account? <a href="signup.html">Sign up</a></p>
         </div>
     </div>
-    <script src="../js/api.js"></script>
+    <script>
+        window.API_BASE_URL = 'http://localhost:8000/api';
+    </script>
+    <script src="../js/api.js?v=2026-09-25-1"></script>
     <script>
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
