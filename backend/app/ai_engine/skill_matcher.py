@@ -5,7 +5,6 @@ NLP and Skill Matching Engine
 - Career path matching
 """
 
-import re
 from typing import List, Dict
 
 class SkillMatcher:
@@ -257,23 +256,21 @@ class SkillMatcher:
         ]
     
     def _normalize_goal(self, goal: str) -> str:
-        """Normalize career goal to taxonomy key without false positives from unrelated words."""
-        goal_lower = (goal or "").lower()
-        normalized = re.sub(r"[^a-z0-9\s-]", " ", goal_lower)
-
-        if "machine learning" in normalized or re.search(r"(?<![a-z])ml(?![a-z])", normalized):
+        """Normalize career goal to taxonomy key"""
+        goal_lower = goal.lower()
+        if "machine learning" in goal_lower or "ml" in goal_lower:
             return "ml"
-        elif "backend" in normalized:
+        elif "backend" in goal_lower:
             return "backend"
-        elif "frontend" in normalized:
+        elif "frontend" in goal_lower:
             return "frontend"
-        elif "full stack" in normalized:
+        elif "full stack" in goal_lower:
             return "fullstack"
-        elif "data" in normalized:
+        elif "data" in goal_lower:
             return "data"
-        elif "devops" in normalized:
+        elif "devops" in goal_lower:
             return "devops"
-        elif "mobile" in normalized:
+        elif "mobile" in goal_lower:
             return "mobile"
         return "fullstack"
     

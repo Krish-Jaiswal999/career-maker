@@ -135,23 +135,12 @@ function removeSkill(skill) {
 
 function updateSkillsDisplay() {
     const container = document.getElementById('skills-list');
-    container.innerHTML = '';
-
-    userSkills.forEach((skill) => {
-        const tag = document.createElement('span');
-        tag.className = 'skill-tag';
-        tag.textContent = skill;
-
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.className = 'skill-remove';
-        removeButton.setAttribute('aria-label', `Remove skill ${skill}`);
-        removeButton.textContent = '×';
-        removeButton.addEventListener('click', () => removeSkill(skill));
-
-        tag.appendChild(removeButton);
-        container.appendChild(tag);
-    });
+    container.innerHTML = userSkills.map(skill => `
+        <span class="skill-tag">
+            ${skill}
+            <button type="button" onclick="removeSkill('${skill}')" class="skill-remove">×</button>
+        </span>
+    `).join('');
 }
 
 async function generateRoadmap() {
@@ -375,33 +364,25 @@ function updateKeywordSuggestions(careerGoal) {
         return;
     }
     
-    const buttons = [];
+    let html = '';
     filteredSuggestions.forEach(skill => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = `+ ${skill}`;
-        button.style.background = '#e8f0ff';
-        button.style.border = '1px solid #667eea';
-        button.style.color = '#667eea';
-        button.style.padding = '6px 12px';
-        button.style.borderRadius = '20px';
-        button.style.cursor = 'pointer';
-        button.style.fontSize = '0.85rem';
-        button.style.transition = 'all 0.2s';
-        button.addEventListener('mouseenter', () => {
-            button.style.background = '#667eea';
-            button.style.color = 'white';
-        });
-        button.addEventListener('mouseleave', () => {
-            button.style.background = '#e8f0ff';
-            button.style.color = '#667eea';
-        });
-        button.addEventListener('click', () => quickAddSkill(skill));
-        buttons.push(button);
+        html += `
+            <button type="button" onclick="quickAddSkill('${skill}')" style="
+                background: #e8f0ff;
+                border: 1px solid #667eea;
+                color: #667eea;
+                padding: 6px 12px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 0.85rem;
+                transition: all 0.2s;
+            " onmouseover="this.style.background='#667eea'; this.style.color='white';" onmouseout="this.style.background='#e8f0ff'; this.style.color='#667eea';">
+                + ${skill}
+            </button>
+        `;
     });
-
-    container.innerHTML = '';
-    buttons.forEach((button) => container.appendChild(button));
+    
+    container.innerHTML = html;
 }
 
 function quickAddSkill(skill) {

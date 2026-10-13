@@ -5,15 +5,13 @@ Portfolio Generator
 - Portfolio generation
 """
 
-import html
 from typing import Dict, List
-from jinja2 import Environment
+from jinja2 import Template
 
 class PortfolioGenerator:
     """Generates personalized portfolios"""
     
     def __init__(self):
-        self.env = Environment(autoescape=True)
         self.templates = {
             "faang": self._get_faang_template(),
             "startup": self._get_startup_template(),
@@ -51,9 +49,9 @@ class PortfolioGenerator:
             "css_content": self._get_css_for_template(template_type)
         }
     
-    def _get_faang_template(self):
+    def _get_faang_template(self) -> Template:
         """FAANG-style portfolio template"""
-        return self.env.from_string("""
+        return Template("""
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,9 +149,9 @@ class PortfolioGenerator:
 </html>
         """)
     
-    def _get_startup_template(self):
+    def _get_startup_template(self) -> Template:
         """Startup-style portfolio template"""
-        return self.env.from_string("""
+        return Template("""
 <!doctype html>
 <html lang="en">
 <head>
@@ -229,9 +227,9 @@ class PortfolioGenerator:
 </html>
                 """)
     
-    def _get_researcher_template(self):
+    def _get_researcher_template(self) -> Template:
         """Academic/Research portfolio template"""
-        return self.env.from_string("""
+        return Template("""
 <!doctype html>
 <html lang="en">
 <head>
@@ -296,9 +294,9 @@ class PortfolioGenerator:
 </html>
                 """)
     
-    def _get_minimal_template(self):
+    def _get_minimal_template(self) -> Template:
         """Minimal portfolio template"""
-        return self.env.from_string("""
+        return Template("""
 <!doctype html>
 <html lang="en">
 <head>
